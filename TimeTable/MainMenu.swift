@@ -19,7 +19,9 @@ struct MainMenu: View {
         if #available(iOS 15.0, *) {
             UITabBar.appearance().scrollEdgeAppearance = tabBarAppeareance
         }
+        
         UITabBar.appearance().standardAppearance = tabBarAppeareance
+        UITableView.appearance().backgroundColor = UIColor(named: "App Background")
         
     }
     
@@ -49,5 +51,6 @@ struct MainMenu: View {
 struct MainMenu_Previews: PreviewProvider {
     static var previews: some View {
         MainMenu()
+            .preferredColorScheme(.light)
     }
 }

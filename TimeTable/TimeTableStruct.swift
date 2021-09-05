@@ -7,18 +7,21 @@
 
 import Foundation
 
+var mainDomain: String = "studrasp.ru"
+
 struct Lesson: Codable {
     var name: String
     var teacherName: String
     var audience: String
     var type: String
+    var index: Int?
     
     var start: Int
     var end: Int
     
     static var empty: Lesson {
         get {
-            return Lesson(name: "", teacherName: "", audience: "", type: "", start: 0, end: 0)
+            return Lesson(name: "", teacherName: "", audience: "", type: "", index: 0, start: 0, end: 0)
         }
     }
 }
@@ -71,7 +74,8 @@ struct ServerTimeTable: Codable {
     var info: TimeTable
 }
 
-struct user {
+
+struct user: Codable {
     var login: String
     var session: Int
     

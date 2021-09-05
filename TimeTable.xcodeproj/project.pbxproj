@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		950DC57526E11C7900682F5A /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 950DC57426E11C7900682F5A /* LoginView.swift */; };
+		950DC57526E11C7900682F5A /* AccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 950DC57426E11C7900682F5A /* AccountView.swift */; };
 		950DC57826E139EF00682F5A /* LoadTimeTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 950DC57726E139EF00682F5A /* LoadTimeTableView.swift */; };
 		953575C526DF9EEB004C12B2 /* TimeTableApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 953575C426DF9EEB004C12B2 /* TimeTableApp.swift */; };
 		953575C926DF9EEC004C12B2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 953575C826DF9EEC004C12B2 /* Assets.xcassets */; };
@@ -20,12 +20,13 @@
 		953575DF26DFB396004C12B2 /* TimeTableStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 953575DE26DFB396004C12B2 /* TimeTableStruct.swift */; };
 		953575E126E00AB5004C12B2 /* MainMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 953575E026E00AB5004C12B2 /* MainMenu.swift */; };
 		953575E326E00B2C004C12B2 /* TimeTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 953575E226E00B2C004C12B2 /* TimeTableView.swift */; };
+		95963B4D26E4E2B300E3CB1C /* RegistrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95963B4C26E4E2B300E3CB1C /* RegistrationView.swift */; };
 		95DB2B4A26E105A00068AE39 /* SettingsMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95DB2B4926E105A00068AE39 /* SettingsMenu.swift */; };
 		95F2F57426E04E9D0009D85A /* WeekView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95F2F57326E04E9D0009D85A /* WeekView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		950DC57426E11C7900682F5A /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		950DC57426E11C7900682F5A /* AccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountView.swift; sourceTree = "<group>"; };
 		950DC57726E139EF00682F5A /* LoadTimeTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadTimeTableView.swift; sourceTree = "<group>"; };
 		953575C126DF9EEB004C12B2 /* TimeTable.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TimeTable.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		953575C426DF9EEB004C12B2 /* TimeTableApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeTableApp.swift; sourceTree = "<group>"; };
@@ -40,6 +41,7 @@
 		953575DE26DFB396004C12B2 /* TimeTableStruct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeTableStruct.swift; sourceTree = "<group>"; };
 		953575E026E00AB5004C12B2 /* MainMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMenu.swift; sourceTree = "<group>"; };
 		953575E226E00B2C004C12B2 /* TimeTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeTableView.swift; sourceTree = "<group>"; };
+		95963B4C26E4E2B300E3CB1C /* RegistrationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationView.swift; sourceTree = "<group>"; };
 		95DB2B4926E105A00068AE39 /* SettingsMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsMenu.swift; sourceTree = "<group>"; };
 		95F2F57326E04E9D0009D85A /* WeekView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -60,11 +62,12 @@
 			children = (
 				953575E026E00AB5004C12B2 /* MainMenu.swift */,
 				95DB2B4926E105A00068AE39 /* SettingsMenu.swift */,
-				950DC57426E11C7900682F5A /* LoginView.swift */,
+				950DC57426E11C7900682F5A /* AccountView.swift */,
 				95F2F57326E04E9D0009D85A /* WeekView.swift */,
 				953575E226E00B2C004C12B2 /* TimeTableView.swift */,
 				953575D326DF9F0A004C12B2 /* Card.swift */,
 				950DC57726E139EF00682F5A /* LoadTimeTableView.swift */,
+				95963B4C26E4E2B300E3CB1C /* RegistrationView.swift */,
 			);
 			name = VIews;
 			sourceTree = "<group>";
@@ -190,10 +193,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				95963B4D26E4E2B300E3CB1C /* RegistrationView.swift in Sources */,
 				953575DF26DFB396004C12B2 /* TimeTableStruct.swift in Sources */,
 				953575E126E00AB5004C12B2 /* MainMenu.swift in Sources */,
 				953575DA26DFA369004C12B2 /* Extensions.swift in Sources */,
-				950DC57526E11C7900682F5A /* LoginView.swift in Sources */,
+				950DC57526E11C7900682F5A /* AccountView.swift in Sources */,
 				95DB2B4A26E105A00068AE39 /* SettingsMenu.swift in Sources */,
 				95F2F57426E04E9D0009D85A /* WeekView.swift in Sources */,
 				953575D426DF9F0A004C12B2 /* Card.swift in Sources */,
@@ -257,7 +261,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -312,7 +316,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -332,12 +336,12 @@
 				DEVELOPMENT_TEAM = G7668ALM57;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = TimeTable/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.null.zed.TimeTable;
+				PRODUCT_BUNDLE_IDENTIFIER = com.null.zed.StudRasp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -354,12 +358,12 @@
 				DEVELOPMENT_TEAM = G7668ALM57;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = TimeTable/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.null.zed.TimeTable;
+				PRODUCT_BUNDLE_IDENTIFIER = com.null.zed.StudRasp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

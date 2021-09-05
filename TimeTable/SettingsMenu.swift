@@ -12,47 +12,76 @@ struct SettingsMenu: View {
     @State var person: user = user.empty
 
     var body: some View {
-        VStack(alignment: .center) {
-            HStack {
-                Spacer()
-                
-                Button(person.isEmpty ? "Войти" : "Выйти") {
-                    isLoginMenu = true
+        NavigationView {
+            ScrollView {
+                VStack(alignment: .center, spacing: 8) {
+                    Image(uiImage: UIImage(named: "mainicon")!)
+                        .resizable()
+                        .aspectRatio(1, contentMode: .fit)
+                        .frame(width: 128, height: 128, alignment: .center)
+                        .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                    
+                    Text("StudRasp")
+                        .foregroundColor(Color.cardEnable)
+                        .font(Font.appBold(size: 24))
+                    
+                    Text("v0.9.5 (beta)")
+                        .foregroundColor(Color.cardEnableLight)
+                        .font(Font.appBold(size: 16))
+                    
+                    List {
+                        Section() {
+                            NavigationLink(destination: AccountView()) {
+                                Label(title: {
+                                    Text("Аккаунт")
+                                        .foregroundColor(Color.cardEnable)
+                                        .font(Font.appMedium(size: 16))
+                                }, icon: {
+                                    
+                                })
+                            }
+                            .listRowBackground(
+                                RoundedRectangle(cornerRadius: 8, style: .continuous)
+                                    .foregroundColor(Color.cardDisableLight)
+                            )
+                        }
+                        
+                        Section() {
+                            NavigationLink(destination: AccountView()) {
+                                Label(title: {
+                                    Text("О Приложении")
+                                        .foregroundColor(Color.cardEnable)
+                                        .font(Font.appMedium(size: 16))
+                                }, icon: {
+                                    
+                                })
+                            }
+                            .listRowBackground(
+                                RoundedRectangle(cornerRadius: 8, style: .continuous)
+                                    .foregroundColor(Color.cardDisableLight)
+                            )
+                        }
+                    }
+                    .listStyle(InsetGroupedListStyle())
+                    .scaledToFit()
+                    
                 }
-                .foregroundColor(.cardEnable)
-                .font(Font.appMedium(size: 20))
+                .navigationBarTitle("")
+                .navigationBarHidden(true)
             }
-            .frame(height: 42)
-            .padding(EdgeInsets(top: 0, leading: 16, bottom: 16, trailing: 16))
-            
-            
-            Text(person.login)
-                .foregroundColor(.cardEnable)
-                .font(Font.appMedium(size: 20))
-            
-            
-            Spacer()
-            
-            
-            Button("О Приложении") {
-            }
-            .foregroundColor(.cardEnable)
-            .font(Font.appMedium(size: 20))
-            .padding(8)
-            .cornerRadius(8)
-            .fixedSize(horizontal: false, vertical: true)
+            .frame(minWidth: 0, idealWidth: .infinity, maxWidth: .infinity, minHeight: 0, idealHeight: .infinity, maxHeight: .infinity, alignment: .top)
+            .fixedSize(horizontal: false, vertical: false)
+            .background(Color.appBackground.ignoresSafeArea())
+
         }
-        .padding(EdgeInsets(top: 0, leading: 0, bottom: 16, trailing: 0))
-        .background(Color.appBackground.ignoresSafeArea())
-        
         .sheet(isPresented: $isLoginMenu, content: {
-            LoginView()
+            AccountView()
         })
     }
 }
 
 struct SettingsMenu_Previews: PreviewProvider {
     static var previews: some View {
-        SettingsMenu(isLoginMenu: false)
+        SettingsMenu()
     }
 }

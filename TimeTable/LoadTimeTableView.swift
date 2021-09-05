@@ -37,19 +37,14 @@ struct LoadTimeTableView: View {
                         .padding(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
                         .background(
                             RoundedRectangle(cornerRadius: 8)
-                                .foregroundColor(Color.cardDisable)
+                                .foregroundColor(Color.cardDisableLight)
                                 .frame(height: 36)
                         )
-                    
-//                    Text(code == "" ? "Код" : "")
-//                        .opacity(0.9)
-//                        .disabled(true)
-//                        .allowsHitTesting(false)
                 }
                 
                 Button(action: {
                     isSearching = true
-                    let components = URL(string: "http://hytale-main.ru/main.php?action=table_q&index=\(code)")!
+                    let components = URL(string: "https://\(mainDomain)/main.php?action=get_timetable&index=\(code)")!
                     var request = URLRequest(url: components)
                     request.setValue("Mozilla/5.0", forHTTPHeaderField: "User-Agent")
                     request.timeoutInterval = 10
@@ -65,7 +60,6 @@ struct LoadTimeTableView: View {
                                 timeTable = request.timetable!
                                 UserDefaults.standard.set(String(data: try! JSONEncoder().encode(timeTable), encoding: .utf8)!, forKey: "timetable")
                                 UserDefaults.standard.synchronize()
-                                //UserDefaults.standard.set(timeTable, forKey: "timetable")
 
                                 presentationMode.wrappedValue.dismiss()
                             } else {
@@ -84,7 +78,7 @@ struct LoadTimeTableView: View {
                 }, label: {
                         Text("Добавить")
                             .font(Font.appMedium(size: 20))
-                            .foregroundColor(code.count == 0 ? Color.cardEnable.opacity(0.5) : Color.cardEnable)
+                            .foregroundColor(code.count == 0 ? Color.cardEnableLight : Color.cardEnable)
                     }
                 )
                 .padding(8)

@@ -14,7 +14,7 @@ struct WeekView: View {
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .shadow(color: Color.gray.opacity(0.5), radius: 8, x: 0, y: 4)
+                .shadow(color: Color.shadow, radius: 8, x: 0, y: 4)
                 
                 .overlay(
                     Rectangle()
@@ -50,8 +50,7 @@ struct DayView: View {
                 .strokeBorder(Color.cardEnable, lineWidth: today == dayIndex ? 2 : 0)
                 .background(selectedDay == dayIndex ? Color.cardEnable : Color.cardDisable)
                 .cornerRadius(8)
-                .shadow(color: Color.cardEnable.opacity(selectedDay == dayIndex ? 0.5 : 0), radius: 4, x: 0, y: 0)
-            
+                .shadow(color: Color.shadow.opacity(selectedDay == dayIndex ? 1 : 0), radius: 4, x: 0, y: 0)
             
             VStack {
                 Text("\(date.dayAbr)")

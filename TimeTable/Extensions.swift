@@ -40,16 +40,30 @@ extension Color {
             return Color("Card Background Enable")
         }
     }
+    
+    static var cardEnableLight: Color {
+        get {
+            return Color("Card Enable Light")
+        }
+    }
+    
+    static var cardDisableLight: Color {
+        get {
+            return Color("Card Disable Light")
+        }
+    }
+    
+    static var shadow: Color {
+        get {
+            return Color("Shadow")
+        }
+    }
 }
 
 extension UIImage {
     static var shadowImage: UIImage {
         get {
-            return UIGraphicsImageRenderer(size: CGSize(width: 1, height: 2)).image(actions: {ctx in
-                ctx.cgContext.setFillColor(UIColor(named: "Card Background Disable")!.cgColor)
-                ctx.cgContext.addRect(CGRect(origin: .zero, size: CGSize(width: 1, height: 2)))
-                ctx.cgContext.fillPath()
-            })
+            return UIImage(named: "divider")!
         }
     }
 }
@@ -135,16 +149,38 @@ extension UIApplication {
     }
 }
 
-func hashSHA256(data:Data) -> Data? {
-    var hashData = Data(count: Int(CC_SHA256_DIGEST_LENGTH))
-    
-    _ = hashData.withUnsafeMutableBytes {digestBytes in
-        data.withUnsafeBytes {messageBytes in
-            CC_SHA256(messageBytes, CC_LONG(data.count), digestBytes)
-        }
+extension Data{
+    public func sha256() -> String{
+        return hexStringFromData(input: digest(input: self as NSData))
     }
     
-    return hashData
+    private func digest(input : NSData) -> NSData {
+        let digestLength = Int(CC_SHA256_DIGEST_LENGTH)
+        var hash = [UInt8](repeating: 0, count: digestLength)
+        CC_SHA256(input.bytes, UInt32(input.length), &hash)
+        return NSData(bytes: hash, length: digestLength)
+    }
+    
+    private  func hexStringFromData(input: NSData) -> String {
+        var bytes = [UInt8](repeating: 0, count: input.length)
+        input.getBytes(&bytes, length: input.length)
+        
+        var hexString = ""
+        for byte in bytes {
+            hexString += String(format:"%02x", UInt8(byte))
+        }
+        
+        return hexString
+    }
+}
+
+public extension String {
+    func sha256() -> String{
+        if let stringData = self.data(using: String.Encoding.utf8) {
+            return stringData.sha256()
+        }
+        return ""
+    }
 }
 
 
