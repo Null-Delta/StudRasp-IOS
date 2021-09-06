@@ -7,10 +7,6 @@
 
 import SwiftUI
 
-struct loadTableRequest: Codable {
-    var error: error
-    var timetable: ServerTimeTable?
-}
 
 struct LoadTimeTableView: View {
     @State var code: String = ""
@@ -44,10 +40,21 @@ struct LoadTimeTableView: View {
                 
                 Button(action: {
                     isSearching = true
-                    let components = URL(string: "https://\(mainDomain)/main.php?action=get_timetable&index=\(code)")!
-                    var request = URLRequest(url: components)
+                    let url = URL(string: "https://\(mainDomain)/main.php")!
+                    
+                    var components = URLComponents(url: url, resolvingAgainstBaseURL: false)!
+                    
+                    components.queryItems = [
+                        URLQueryItem(name: "action", value: "get_timetable"),
+                        URLQueryItem(name: "index", value: code)
+                    ]
+                    
+                    var request = URLRequest(url: url)
+                    
                     request.setValue("Mozilla/5.0", forHTTPHeaderField: "User-Agent")
-                    request.timeoutInterval = 10
+                    request.httpMethod = "POST"
+                    request.httpBody = Data(components.url!.query!.utf8)
+                    request.timeoutInterval = 5
     
                     let task = URLSession.shared.dataTask(with: request) { data, response, error in
                         isSearching = false

@@ -34,7 +34,7 @@ struct WeekView: View {
 
         }
         .fixedSize(horizontal: false, vertical: true)
-        .animation(.linear(duration: 0.1))
+        .animation(.none)
     }
 }
 

@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import UIKit
+
 
 var mainDomain: String = "studrasp.ru"
 
@@ -77,17 +79,32 @@ struct ServerTimeTable: Codable {
 
 struct user: Codable {
     var login: String
-    var session: Int
+    var session: String
     
     static var empty: user {
         get {
-            return user(login: "",session: -1)
+            return user(login: "",session: "")
         }
     }
     
     var isEmpty: Bool {
         get {
-            return login == "" && session == -1
+            return login == "" && session == ""
         }
+    }
+}
+
+
+struct loadTableRequest: Codable {
+    var error: error
+    var timetable: ServerTimeTable?
+    var session: String?
+    var login: String?
+}
+
+extension UINavigationController {
+    override open func viewDidLoad() {
+        super.viewDidLoad()
+        interactivePopGestureRecognizer?.delegate = nil
     }
 }

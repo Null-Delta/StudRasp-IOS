@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct RegistrationView: View {
+    @Binding var person: user
+    @State var isLoggining: Bool
+
     @State var login: String = ""
     @State var password: String = ""
     @State var email: String = ""
@@ -16,8 +19,7 @@ struct RegistrationView: View {
     @State var errorText: String = ""
     @State var isShowError: Bool = false
     
-    @State var wasRegistered: Bool = false
-    
+        
     @Environment(\.presentationMode) var presentationMode
 
     var body: some View {
@@ -32,22 +34,37 @@ struct RegistrationView: View {
                 Spacer()
                 
                 Button(action: {
-                    if(!wasRegistered) {
+                    if(isLoggining) {
+                        let url = URL(string: "https://\(mainDomain)/main.php")!
                         
-                        let components = URL(string: "https://\(mainDomain)/main.php?action=registration&login=\(login)&email=\(email)&password=\(password.sha256())")!
-
-                        var request = URLRequest(url: components)
+                        var components = URLComponents(url: url, resolvingAgainstBaseURL: false)!
+                        
+                        components.queryItems = [
+                            URLQueryItem(name: "action", value: "authorization"),
+                            URLQueryItem(name: "login", value: login),
+                            URLQueryItem(name: "password", value: password),
+                        ]
+                        
+                        var request = URLRequest(url: url)
+                        
                         request.setValue("Mozilla/5.0", forHTTPHeaderField: "User-Agent")
+                        request.httpMethod = "POST"
+                        request.httpBody = Data(components.url!.query!.utf8)
                         request.timeoutInterval = 5
-
+                        
+                        
                         let task = URLSession.shared.dataTask(with: request) { data, response, error in
                             if let data = data {
-                                print(String(data: data, encoding: .utf8))
-                                
                                 let request = try! JSONDecoder().decode(loadTableRequest.self, from: data)
 
                                 if(request.error.code == 0) {
-                                    wasRegistered = true
+                                    
+                                    let newUser = user(login: request.login!, session: request.session!)
+                                    UserDefaults.standard.set(String(data: try! JSONEncoder().encode(newUser), encoding: .utf8), forKey: "user")
+                                    person = newUser
+                                    
+                                    presentationMode.wrappedValue.dismiss()
+                                    
                                 } else {
                                     errorText = request.error.message
                                     isShowError = true
@@ -60,10 +77,54 @@ struct RegistrationView: View {
 
                         task.resume()
                     } else {
+                        let url = URL(string: "https://\(mainDomain)/main.php")!
+                        
+                        var components = URLComponents(url: url, resolvingAgainstBaseURL: false)!
+                        
+                        components.queryItems = [
+                            URLQueryItem(name: "action", value: "registration"),
+                            URLQueryItem(name: "login", value: login),
+                            URLQueryItem(name: "password", value: password),
+                            URLQueryItem(name: "email", value: email)
+                        ]
+                        
+                        var request = URLRequest(url: url)
+                        
+                        request.setValue("Mozilla/5.0", forHTTPHeaderField: "User-Agent")
+                        request.httpMethod = "POST"
+                        request.httpBody = Data(components.url!.query!.utf8)
+                        request.timeoutInterval = 5
+                        
+                        //print(String(data: request.httpBody!, encoding: .utf8))
+                        
+                        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+                            if let data = data {
+                                //print(String(data: data, encoding: .utf8))
+                                
+                                let request = try! JSONDecoder().decode(loadTableRequest.self, from: data)
 
+                                if(request.error.code == 0) {
+                                    
+                                    let newUser = user(login: login, session: request.session!)
+                                    UserDefaults.standard.set(String(data: try! JSONEncoder().encode(newUser), encoding: .utf8), forKey: "user")
+                                    person = newUser
+                                    
+                                    presentationMode.wrappedValue.dismiss()
+                                    
+                                } else {
+                                    errorText = request.error.message
+                                    isShowError = true
+                                }
+                            } else {
+                                errorText = "Не удалось отправить запрос, проверьте соединение с интернетом и попробуйте снова"
+                                isShowError = true
+                            }
+                        }
+
+                        task.resume()
                     }
                 }, label:  {
-                    Text(wasRegistered ? "Подтверждение" : "Регистрация")
+                    Text(isLoggining ? "Вход" : "Регистрация")
                         .foregroundColor(canRegistration() ? .cardEnable : .cardEnableLight)
                 })
                 .disabled(!canRegistration())
@@ -72,7 +133,6 @@ struct RegistrationView: View {
             .padding(EdgeInsets(top: 0, leading: 0, bottom: 32, trailing: 0))
             
             
-            if(!wasRegistered) {
                 HStack {
                     Text("Логин")
                         .foregroundColor(.cardEnable)
@@ -92,7 +152,7 @@ struct RegistrationView: View {
                     .font(Font.appMedium(size: 20))
                     .padding(EdgeInsets(top: 0, leading: 0, bottom: 16, trailing: 0))
 
-                
+            if(!isLoggining) {
                 HStack {
                     Text("Почта")
                         .foregroundColor(.cardEnable)
@@ -112,6 +172,7 @@ struct RegistrationView: View {
                     .font(Font.appMedium(size: 20))
                     .padding(EdgeInsets(top: 0, leading: 0, bottom: 16, trailing: 0))
                 
+            }
                 HStack {
                     Text("Пароль")
                         .foregroundColor(.cardEnable)
@@ -135,28 +196,6 @@ struct RegistrationView: View {
                 Text(checkValues())
                     .font(Font.appMedium(size: 16))
                     .foregroundColor(Color.red)
-            }
-            else {
-                HStack {
-                    Text("Код")
-                        .foregroundColor(.cardEnable)
-                        .font(Font.appMedium(size: 16))
-                    
-                    Spacer()
-                }
-                
-                TextField("", text: $code)
-                    .frame(height: 36, alignment: .center)
-                    .padding(EdgeInsets(top: 0, leading: 12, bottom: 0, trailing: 12))
-                    .background(
-                        RoundedRectangle(cornerRadius: 8, style: .continuous)
-                            .foregroundColor(Color.cardDisableLight)
-                    )
-                    .foregroundColor(.cardEnable)
-                    .font(Font.appMedium(size: 20))
-                    .textContentType(.password)
-                    .padding(EdgeInsets(top: 0, leading: 0, bottom: 16, trailing: 0))
-            }
                 
             Spacer()
         }
@@ -178,11 +217,7 @@ struct RegistrationView: View {
     }
     
     func canRegistration() -> Bool {
-        if(!wasRegistered) {
-            return checkValues() == "" && login.count != 0 && password.count != 0 && email.count != 0
-        } else {
-            return code.count > 0
-        }
+        return checkValues() == "" && login.count != 0 && password.count != 0 && (isLoggining ? true : email.count != 0)
     }
     
     func checkValues() -> String {
@@ -200,7 +235,8 @@ struct RegistrationView: View {
 }
 
 struct RegistrationView_Previews: PreviewProvider {
+    @State static var person = user(login: "", session: "")
     static var previews: some View {
-        RegistrationView()
+        RegistrationView(person: $person, isLoggining: true)
     }
 }

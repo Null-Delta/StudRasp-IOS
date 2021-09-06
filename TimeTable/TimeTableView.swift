@@ -39,12 +39,6 @@ struct TimeTableView: View {
                     .font(Font.appMedium(size: 20))
                     
                     Spacer()
-                    
-                    if(!activeTimeTable.info.isEmpty) {
-                        Button("Обновить") {
-                            
-                        }
-                    }
                 }
                 .frame(height: 36)
                 .padding(EdgeInsets(top: 0, leading: 16, bottom: 8, trailing: 16))

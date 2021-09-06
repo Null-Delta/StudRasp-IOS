@@ -123,7 +123,7 @@ struct Card: View {
 }
 
 struct Card_Previews: PreviewProvider {
-    @State static var state : CardState = .active
+    @State static var state : CardState = .highlight
     @State static var lesson: Lesson = Lesson(name: "Теоретические основы компьютерной грвфики", teacherName: "Жук А.С.", audience: "A305", type: "Лк", start: 480, end: 570)
     
     static var previews: some View {
