@@ -42,21 +42,21 @@ struct TimeTable: Codable {
     var firstWeek: String
     var secondWeek: String
     
+    var lastUpdateDate: String? = nil
+    
     var days: [Day]
     
     static var empty: TimeTable {
         get {
-            var tt = TimeTable(name: "", firstWeek: "", secondWeek: "", days: [])
-            
-            tt.days.append(Day(lessons1: [], lessons2: []))
-            tt.days.append(Day(lessons1: [], lessons2: []))
-            tt.days.append(Day(lessons1: [], lessons2: []))
-            tt.days.append(Day(lessons1: [], lessons2: []))
-            tt.days.append(Day(lessons1: [], lessons2: []))
-            tt.days.append(Day(lessons1: [], lessons2: []))
-            tt.days.append(Day(lessons1: [], lessons2: []))
-
-            return tt;
+            return TimeTable(name: "", firstWeek: "", secondWeek: "", days: [
+                Day(lessons1: [], lessons2: []),
+                Day(lessons1: [], lessons2: []),
+                Day(lessons1: [], lessons2: []),
+                Day(lessons1: [], lessons2: []),
+                Day(lessons1: [], lessons2: []),
+                Day(lessons1: [], lessons2: []),
+                Day(lessons1: [], lessons2: [])
+            ])
         }
     }
     
@@ -106,5 +106,14 @@ extension UINavigationController {
     override open func viewDidLoad() {
         super.viewDidLoad()
         interactivePopGestureRecognizer?.delegate = nil
+    }
+}
+
+
+class TableObserved: ObservableObject {
+    @Published var table: ServerTimeTable
+    
+    init(table tbl: ServerTimeTable) {
+        table = tbl
     }
 }

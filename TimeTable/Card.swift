@@ -109,7 +109,7 @@ struct Card: View {
             .fixedSize(horizontal: false, vertical: true)
             .animation(.none)
         }
-      
+        .padding(EdgeInsets(top: 8, leading: 0, bottom: 0, trailing: 0))
     }
 
     func numToTime(num: Int) -> String {

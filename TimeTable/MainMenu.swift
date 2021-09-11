@@ -22,7 +22,6 @@ struct MainMenu: View {
         
         UITabBar.appearance().standardAppearance = tabBarAppeareance
         UITableView.appearance().backgroundColor = UIColor(named: "App Background")
-        
     }
     
     var body: some View {

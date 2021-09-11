@@ -10,31 +10,48 @@ import SwiftUI
 struct WeekView: View {
     @Binding var date: Date
     @Binding var selectedDay: Int
+    var needBottomIgnore: Bool = true
     
     var body: some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .shadow(color: Color.shadow, radius: 8, x: 0, y: 4)
+        GeometryReader {val in
+            VStack {
+                Spacer()
                 
-                .overlay(
-                    Rectangle()
-                        .padding(EdgeInsets(top: 16, leading: 0, bottom: 0, trailing: 0))
-                )
-                
-                .foregroundColor(Color.appBackground)
+                ZStack(alignment: .bottom) {
+                    RoundedRectangle(cornerRadius: 16, style: .continuous)
+                        .shadow(color: Color.shadow, radius: 8, x: 0, y: 4)
+                        
+                        .overlay(
+                            Rectangle()
+                                .padding(EdgeInsets(top: 16, leading: 0, bottom: 0, trailing: 0))
+                        )
+                        
+                        .foregroundColor(Color.appBackground)
 
-            HStack {
-                ForEach(0..<7, id: \.self) { index in
-                    DayView(date: .constant(date.startOfWeek.addDays(days: index)), selectedDay: $selectedDay, today: .constant(date.weekDay - 1), dayIndex: index)
-                            .frame(height: 48)
+                    VStack(spacing: 0) {
+                        HStack {
+                            ForEach(0..<7, id: \.self) { index in
+                                DayView(date: .constant(date.startOfWeek.addDays(days: index)), selectedDay: $selectedDay, today: .constant(date.weekDay - 1), dayIndex: index)
+                                        .frame(height: 48)
+                            }
+                        }
+                        .padding(8)
+                        
+                        if(needBottomIgnore) {
+                            Spacer()
+                        }
+                        
+                    }
+                    .ignoresSafeArea()
                 }
+                .frame(maxWidth: .infinity, maxHeight: 48 + val.safeAreaInsets.top, alignment: .bottom)
+                //.fixedSize(horizontal: false, vertical: true)
             }
-            .padding(8)
-            
-
         }
-        .fixedSize(horizontal: false, vertical: true)
         .animation(.none)
+        .edgesIgnoringSafeArea(needBottomIgnore ?  .bottom : .top)
+        //.edgesIgnoringSafeArea(.bottom)
+        
     }
 }
 

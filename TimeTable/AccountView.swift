@@ -84,7 +84,7 @@ struct AccountView: View {
                 
                 List() {
                     Section() {
-                        NavigationLink(destination: AccountView()) {
+                        NavigationLink(destination: MyTimeTablesView()) {
                             Label(title: {
                                 Text("Мои расписания")
                                     .foregroundColor(Color.cardEnable)

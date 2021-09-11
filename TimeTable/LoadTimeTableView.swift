@@ -60,6 +60,7 @@ struct LoadTimeTableView: View {
                         isSearching = false
                         if let data = data {
                             let json = String(data: data, encoding: .utf8)!
+                            print(json)
                             
                             let request = try! JSONDecoder().decode(loadTableRequest.self, from: json.data(using: .utf8)!)
                             

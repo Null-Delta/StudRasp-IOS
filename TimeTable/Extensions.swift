@@ -7,6 +7,7 @@
 
 import SwiftUI
 import CommonCrypto
+import Combine
 
 extension Font {
     static func appMedium(size: CGFloat) -> Font {
@@ -56,6 +57,24 @@ extension Color {
     static var shadow: Color {
         get {
             return Color("Shadow")
+        }
+    }
+    
+    static var warning: Color {
+        get {
+            return Color("Warning")
+        }
+    }
+    
+    static var warningEnable: Color {
+        get {
+            return Color("Warning Enable")
+        }
+    }
+    
+    static var warningDisable: Color {
+        get {
+            return Color("Warning Disable")
         }
     }
 }
@@ -210,4 +229,69 @@ extension CharacterSet {
         allowed.remove(charactersIn: "\(generalDelimitersToEncode)\(subDelimitersToEncode)")
         return allowed
     }()
+}
+
+
+struct AlertControl: UIViewControllerRepresentable {
+
+    @Binding var textString: String
+    @Binding var show: Bool
+
+    var title: String
+    var message: String
+    
+    var onSubmit: () -> ()
+
+
+    func makeUIViewController(context: UIViewControllerRepresentableContext<AlertControl>) -> UIViewController {
+        return UIViewController() // holder controller - required to present alert
+    }
+
+    func updateUIViewController(_ viewController: UIViewController, context: UIViewControllerRepresentableContext<AlertControl>) {
+        guard context.coordinator.alert == nil else { return }
+        if self.show {
+            let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+            context.coordinator.alert = alert
+
+            alert.addTextField { textField in
+                textField.placeholder = "Enter some text"
+                textField.text = self.textString            // << initial value if any
+                textField.delegate = context.coordinator    // << use coordinator as delegate
+            }
+            alert.addAction(UIAlertAction(title: "cancel", style: .destructive) { _ in
+                // your action here
+            })
+            alert.addAction(UIAlertAction(title: "Submit", style: .default) { _ in
+                onSubmit()
+            })
+
+            DispatchQueue.main.async { // must be async !!
+                viewController.present(alert, animated: true, completion: {
+                    self.show = false  // hide holder after alert dismiss
+                    context.coordinator.alert = nil
+                })
+            }
+        }
+    }
+
+    func makeCoordinator() -> AlertControl.Coordinator {
+        Coordinator(self)
+    }
+
+    class Coordinator: NSObject, UITextFieldDelegate {
+        var alert: UIAlertController?
+        var control: AlertControl
+        init(_ control: AlertControl) {
+            self.control = control
+        }
+
+        func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+            if let text = textField.text as NSString? {
+                self.control.textString = text.replacingCharacters(in: range, with: string)
+            } else {
+                self.control.textString = ""
+            }
+            return true
+        }
+    }
 }
