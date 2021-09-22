@@ -10,7 +10,7 @@ import SwiftUI
 
 struct LoadTimeTableView: View {
     @State var code: String = ""
-    @Binding var timeTable: ServerTimeTable
+    @ObservedObject var timeTable: TimeTable
     
     @State var errorText: String = ""
     @State var isShowError: Bool = false
@@ -40,32 +40,26 @@ struct LoadTimeTableView: View {
                 
                 Button(action: {
                     isSearching = true
-                    let url = URL(string: "https://\(mainDomain)/main.php")!
                     
-                    var components = URLComponents(url: url, resolvingAgainstBaseURL: false)!
-                    
-                    components.queryItems = [
-                        URLQueryItem(name: "action", value: "get_timetable"),
-                        URLQueryItem(name: "index", value: code)
-                    ]
-                    
-                    var request = URLRequest(url: url)
-                    
-                    request.setValue("Mozilla/5.0", forHTTPHeaderField: "User-Agent")
-                    request.httpMethod = "POST"
-                    request.httpBody = Data(components.url!.query!.utf8)
-                    request.timeoutInterval = 5
-    
-                    let task = URLSession.shared.dataTask(with: request) { data, response, error in
+                    postRequest(action: "get_timetable", values: ["id":"\(code)"], onSucsess: { data, response, error in
                         isSearching = false
                         if let data = data {
                             let json = String(data: data, encoding: .utf8)!
-                            print(json)
                             
                             let request = try! JSONDecoder().decode(loadTableRequest.self, from: json.data(using: .utf8)!)
                             
                             if(request.error.code == 0) {
-                                timeTable = request.timetable!
+                                let json = toDictionary(data: data)!
+                                
+                                let tableData = try! JSONSerialization.data(withJSONObject: (json["timetable"] as! [String: Any])["json"] as! [String: Any], options: .prettyPrinted)
+
+                                let loadTable = try! JSONDecoder().decode(TimeTable.self, from: tableData)
+                                loadTable.tableID = (json["timetable"] as! [String: Any])["id"] as? Int
+                                
+                                DispatchQueue.main.async {
+                                    timeTable.setValues(table: loadTable)
+                                }
+                                                                
                                 UserDefaults.standard.set(String(data: try! JSONEncoder().encode(timeTable), encoding: .utf8)!, forKey: "timetable")
                                 UserDefaults.standard.synchronize()
 
@@ -79,9 +73,7 @@ struct LoadTimeTableView: View {
                             isShowError = true
                             //login = error!.localizedDescription
                         }
-                    }
-                    
-                    task.resume()
+                    })
                     
                 }, label: {
                         Text("Добавить")
@@ -104,11 +96,14 @@ struct LoadTimeTableView: View {
             Spacer()
         }
         .background(Color.appBackground.ignoresSafeArea())
+        .onOpenURL(perform: {url in
+            presentationMode.wrappedValue.dismiss()
+        })
     }
 }
 
 struct LoadTimeTableView_Previews: PreviewProvider {
     static var previews: some View {
-        LoadTimeTableView(timeTable: .constant(ServerTimeTable(id: -1, info: TimeTable.empty)))
+        LoadTimeTableView(timeTable: TimeTable.empty)
     }
 }

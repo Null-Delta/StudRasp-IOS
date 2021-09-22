@@ -11,6 +11,7 @@ struct WeekView: View {
     @Binding var date: Date
     @Binding var selectedDay: Int
     var needBottomIgnore: Bool = true
+    var isInSheet: Bool = false
     
     var body: some View {
         GeometryReader {val in
@@ -44,14 +45,13 @@ struct WeekView: View {
                     }
                     .ignoresSafeArea()
                 }
-                .frame(maxWidth: .infinity, maxHeight: 48 + val.safeAreaInsets.top, alignment: .bottom)
+                .frame(maxWidth: .infinity, maxHeight: 48 + (isInSheet ? val.safeAreaInsets.bottom : val.safeAreaInsets.top), alignment: .bottom)
+                .offset(CGSize(width: 0, height: (isInSheet ? val.safeAreaInsets.bottom : val.safeAreaInsets.top)))
                 //.fixedSize(horizontal: false, vertical: true)
             }
         }
         .animation(.none)
-        .edgesIgnoringSafeArea(needBottomIgnore ?  .bottom : .top)
-        //.edgesIgnoringSafeArea(.bottom)
-        
+        .edgesIgnoringSafeArea(needBottomIgnore ?  (isInSheet ? .leading : .bottom) : .top)
     }
 }
 

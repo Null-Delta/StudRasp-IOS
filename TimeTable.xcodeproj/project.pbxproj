@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		950DC57526E11C7900682F5A /* AccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 950DC57426E11C7900682F5A /* AccountView.swift */; };
 		950DC57826E139EF00682F5A /* LoadTimeTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 950DC57726E139EF00682F5A /* LoadTimeTableView.swift */; };
+		9521B8AD26EE6A1000685EC2 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9521B8AC26EE6A1000685EC2 /* SettingsView.swift */; };
 		953575C526DF9EEB004C12B2 /* TimeTableApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 953575C426DF9EEB004C12B2 /* TimeTableApp.swift */; };
 		953575C926DF9EEC004C12B2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 953575C826DF9EEC004C12B2 /* Assets.xcassets */; };
 		953575CC26DF9EEC004C12B2 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 953575CB26DF9EEC004C12B2 /* Preview Assets.xcassets */; };
@@ -20,6 +21,7 @@
 		953575DF26DFB396004C12B2 /* TimeTableStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 953575DE26DFB396004C12B2 /* TimeTableStruct.swift */; };
 		953575E126E00AB5004C12B2 /* MainMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 953575E026E00AB5004C12B2 /* MainMenu.swift */; };
 		953575E326E00B2C004C12B2 /* TimeTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 953575E226E00B2C004C12B2 /* TimeTableView.swift */; };
+		954349A826F7196800852FBC /* TimeSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 954349A726F7196800852FBC /* TimeSettingsView.swift */; };
 		95798A6826EBDA4E00EF80E5 /* ValueSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95798A6726EBDA4E00EF80E5 /* ValueSelectorView.swift */; };
 		95798A6A26EBF53700EF80E5 /* values.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95798A6926EBF53700EF80E5 /* values.swift */; };
 		959294B026EB9FCF009CACCD /* TimeTableEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 959294AF26EB9FCF009CACCD /* TimeTableEditor.swift */; };
@@ -28,14 +30,16 @@
 		95B0EE8126EBB0C3005E61CA /* NewLessonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95B0EE8026EBB0C3005E61CA /* NewLessonView.swift */; };
 		95C3CC8226E924C900B96F69 /* MyTimeTablesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95C3CC8126E924C900B96F69 /* MyTimeTablesView.swift */; };
 		95C3CC8426E94C6700B96F69 /* TimeTableCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95C3CC8326E94C6700B96F69 /* TimeTableCard.swift */; };
-		95D5C9D226ED346700C0744D /* TableClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95D5C9D126ED346700C0744D /* TableClass.swift */; };
 		95DB2B4A26E105A00068AE39 /* SettingsMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95DB2B4926E105A00068AE39 /* SettingsMenu.swift */; };
 		95F2F57426E04E9D0009D85A /* WeekView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95F2F57326E04E9D0009D85A /* WeekView.swift */; };
+		95F90BC626F1423E008F8D36 /* TablePreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95F90BC526F1423E008F8D36 /* TablePreviewView.swift */; };
+		95F90BC826F1A452008F8D36 /* EmailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95F90BC726F1A452008F8D36 /* EmailView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		950DC57426E11C7900682F5A /* AccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountView.swift; sourceTree = "<group>"; };
 		950DC57726E139EF00682F5A /* LoadTimeTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadTimeTableView.swift; sourceTree = "<group>"; };
+		9521B8AC26EE6A1000685EC2 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		953575C126DF9EEB004C12B2 /* TimeTable.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TimeTable.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		953575C426DF9EEB004C12B2 /* TimeTableApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeTableApp.swift; sourceTree = "<group>"; };
 		953575C826DF9EEC004C12B2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -49,6 +53,7 @@
 		953575DE26DFB396004C12B2 /* TimeTableStruct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeTableStruct.swift; sourceTree = "<group>"; };
 		953575E026E00AB5004C12B2 /* MainMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMenu.swift; sourceTree = "<group>"; };
 		953575E226E00B2C004C12B2 /* TimeTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeTableView.swift; sourceTree = "<group>"; };
+		954349A726F7196800852FBC /* TimeSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeSettingsView.swift; sourceTree = "<group>"; };
 		95798A6726EBDA4E00EF80E5 /* ValueSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValueSelectorView.swift; sourceTree = "<group>"; };
 		95798A6926EBF53700EF80E5 /* values.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = values.swift; sourceTree = "<group>"; };
 		959294AF26EB9FCF009CACCD /* TimeTableEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeTableEditor.swift; sourceTree = "<group>"; };
@@ -57,9 +62,11 @@
 		95B0EE8026EBB0C3005E61CA /* NewLessonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewLessonView.swift; sourceTree = "<group>"; };
 		95C3CC8126E924C900B96F69 /* MyTimeTablesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyTimeTablesView.swift; sourceTree = "<group>"; };
 		95C3CC8326E94C6700B96F69 /* TimeTableCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeTableCard.swift; sourceTree = "<group>"; };
-		95D5C9D126ED346700C0744D /* TableClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableClass.swift; sourceTree = "<group>"; };
 		95DB2B4926E105A00068AE39 /* SettingsMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsMenu.swift; sourceTree = "<group>"; };
+		95E15E0626EE04FF00188B4C /* TimeTable.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TimeTable.entitlements; sourceTree = "<group>"; };
 		95F2F57326E04E9D0009D85A /* WeekView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekView.swift; sourceTree = "<group>"; };
+		95F90BC526F1423E008F8D36 /* TablePreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TablePreviewView.swift; sourceTree = "<group>"; };
+		95F90BC726F1A452008F8D36 /* EmailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,6 +112,7 @@
 		953575C326DF9EEB004C12B2 /* TimeTable */ = {
 			isa = PBXGroup;
 			children = (
+				95E15E0626EE04FF00188B4C /* TimeTable.entitlements */,
 				953575C426DF9EEB004C12B2 /* TimeTableApp.swift */,
 				950DC57626E139B700682F5A /* VIews */,
 				953575D526DFA2CC004C12B2 /* Fonts */,
@@ -140,6 +148,8 @@
 				959294AF26EB9FCF009CACCD /* TimeTableEditor.swift */,
 				95B0EE8026EBB0C3005E61CA /* NewLessonView.swift */,
 				95798A6726EBDA4E00EF80E5 /* ValueSelectorView.swift */,
+				9521B8AC26EE6A1000685EC2 /* SettingsView.swift */,
+				954349A726F7196800852FBC /* TimeSettingsView.swift */,
 			);
 			name = Editor;
 			sourceTree = "<group>";
@@ -150,7 +160,6 @@
 				953575DE26DFB396004C12B2 /* TimeTableStruct.swift */,
 				95C3CC8326E94C6700B96F69 /* TimeTableCard.swift */,
 				959294B126EBA0F6009CACCD /* TableView.swift */,
-				95D5C9D126ED346700C0744D /* TableClass.swift */,
 			);
 			name = TimeTable;
 			sourceTree = "<group>";
@@ -165,6 +174,8 @@
 				95C3CC8126E924C900B96F69 /* MyTimeTablesView.swift */,
 				953575E226E00B2C004C12B2 /* TimeTableView.swift */,
 				95DB2B4926E105A00068AE39 /* SettingsMenu.swift */,
+				95F90BC526F1423E008F8D36 /* TablePreviewView.swift */,
+				95F90BC726F1A452008F8D36 /* EmailView.swift */,
 			);
 			name = Menus;
 			sourceTree = "<group>";
@@ -243,6 +254,7 @@
 			files = (
 				95963B4D26E4E2B300E3CB1C /* RegistrationView.swift in Sources */,
 				95798A6826EBDA4E00EF80E5 /* ValueSelectorView.swift in Sources */,
+				95F90BC626F1423E008F8D36 /* TablePreviewView.swift in Sources */,
 				959294B226EBA0F6009CACCD /* TableView.swift in Sources */,
 				953575DF26DFB396004C12B2 /* TimeTableStruct.swift in Sources */,
 				953575E126E00AB5004C12B2 /* MainMenu.swift in Sources */,
@@ -251,15 +263,17 @@
 				953575DA26DFA369004C12B2 /* Extensions.swift in Sources */,
 				950DC57526E11C7900682F5A /* AccountView.swift in Sources */,
 				95B0EE8126EBB0C3005E61CA /* NewLessonView.swift in Sources */,
-				95D5C9D226ED346700C0744D /* TableClass.swift in Sources */,
 				95DB2B4A26E105A00068AE39 /* SettingsMenu.swift in Sources */,
+				954349A826F7196800852FBC /* TimeSettingsView.swift in Sources */,
 				95C3CC8426E94C6700B96F69 /* TimeTableCard.swift in Sources */,
 				95F2F57426E04E9D0009D85A /* WeekView.swift in Sources */,
 				953575D426DF9F0A004C12B2 /* Card.swift in Sources */,
 				95C3CC8226E924C900B96F69 /* MyTimeTablesView.swift in Sources */,
 				953575C526DF9EEB004C12B2 /* TimeTableApp.swift in Sources */,
+				95F90BC826F1A452008F8D36 /* EmailView.swift in Sources */,
 				950DC57826E139EF00682F5A /* LoadTimeTableView.swift in Sources */,
 				953575E326E00B2C004C12B2 /* TimeTableView.swift in Sources */,
+				9521B8AD26EE6A1000685EC2 /* SettingsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -387,7 +401,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = TimeTable/TimeTable.entitlements;
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"TimeTable/Preview Content\"";
 				DEVELOPMENT_TEAM = G7668ALM57;
 				ENABLE_PREVIEWS = YES;
@@ -397,10 +413,11 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.null.zed.StudRasp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -409,7 +426,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = TimeTable/TimeTable.entitlements;
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"TimeTable/Preview Content\"";
 				DEVELOPMENT_TEAM = G7668ALM57;
 				ENABLE_PREVIEWS = YES;
@@ -419,10 +438,11 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.null.zed.StudRasp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

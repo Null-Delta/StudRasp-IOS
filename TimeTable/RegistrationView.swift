@@ -59,7 +59,7 @@ struct RegistrationView: View {
 
                                 if(request.error.code == 0) {
                                     
-                                    let newUser = user(login: request.login!, session: request.session!)
+                                    let newUser = user(login: request.login!, session: request.session!, email: request.email!)
                                     UserDefaults.standard.set(String(data: try! JSONEncoder().encode(newUser), encoding: .utf8), forKey: "user")
                                     person = newUser
                                     
@@ -94,18 +94,16 @@ struct RegistrationView: View {
                         request.httpMethod = "POST"
                         request.httpBody = Data(components.url!.query!.utf8)
                         request.timeoutInterval = 5
-                        
-                        //print(String(data: request.httpBody!, encoding: .utf8))
-                        
+                                                
                         let task = URLSession.shared.dataTask(with: request) { data, response, error in
                             if let data = data {
-                                //print(String(data: data, encoding: .utf8))
                                 
+
                                 let request = try! JSONDecoder().decode(loadTableRequest.self, from: data)
 
                                 if(request.error.code == 0) {
                                     
-                                    let newUser = user(login: login, session: request.session!)
+                                    let newUser = user(login: login, session: request.session!, email: email)
                                     UserDefaults.standard.set(String(data: try! JSONEncoder().encode(newUser), encoding: .utf8), forKey: "user")
                                     person = newUser
                                     
@@ -204,6 +202,9 @@ struct RegistrationView: View {
         .alert(isPresented: $isShowError) {
             Alert(title: Text("Ошибка"), message: Text(errorText), dismissButton: .cancel())
         }
+        .onOpenURL(perform: {url in
+            presentationMode.wrappedValue.dismiss()
+        })
     }
     
     func checkemail(val: String) -> Bool {

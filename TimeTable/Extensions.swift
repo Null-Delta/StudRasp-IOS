@@ -295,3 +295,41 @@ struct AlertControl: UIViewControllerRepresentable {
         }
     }
 }
+
+
+func postRequest(action: String, values: [String:String], onSucsess: @escaping (Data?, URLResponse?, Error?) -> ()) {
+    let url = URL(string: "https://\(mainDomain)/main.php")!
+    
+    var components = URLComponents(url: url, resolvingAgainstBaseURL: false)!
+    
+    components.queryItems = [
+        URLQueryItem(name: "action", value: action)
+    ]
+    
+    for i in values {
+        components.queryItems!.append(URLQueryItem(name: i.key, value: i.value))
+    }
+    
+    var request = URLRequest(url: url)
+    
+    request.setValue("Mozilla/5.0", forHTTPHeaderField: "User-Agent")
+    request.httpMethod = "POST"
+    request.httpBody = Data(components.url!.query!.utf8)
+    request.timeoutInterval = 5
+
+    let task = URLSession.shared.dataTask(with: request) { data, response, error in
+        onSucsess(data, response, error)
+    }
+    
+    task.resume()
+}
+
+func toDictionary(data: Data) -> [String: Any]? {
+    do {
+        return try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
+    } catch {
+        print(error.localizedDescription)
+    }
+    
+    return nil
+}

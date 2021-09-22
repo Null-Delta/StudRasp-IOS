@@ -9,13 +9,14 @@ import SwiftUI
 
 struct TimeTableView: View {
     
-    @Binding var activeTimeTable: ServerTimeTable
+    @EnvironmentObject var activeTimeTable: TimeTable
+    
     @State var date: Date = Date(timeIntervalSinceNow: 0)
-    @State var selectedDay: Int = -1
+    @State var selectedDay: Int = Date(timeIntervalSinceNow: 0).weekDay - 1
     @State var nowLesson: CardState = .wait
     @State var isSelectMenu = false
     
-    let timer = Timer.publish(every: 20, on: .main, in: .common).autoconnect()
+    let timer = Timer.publish(every: 10, on: .main, in: .common).autoconnect()
     
     var body: some View {
         ZStack {
@@ -26,24 +27,51 @@ struct TimeTableView: View {
                         .font(Font.appBlack(size: 32))
                     
                     Spacer()
-                    
-                   
                 }
                 .padding(EdgeInsets(top: 0, leading: 16, bottom: 8, trailing: 16))
                 
                 HStack {
-                    Button(activeTimeTable.info.isEmpty ? "Выбрать" : activeTimeTable.info.name) {
+                    Button(activeTimeTable.isEmpty ? "Выбрать" : activeTimeTable.name) {
                         isSelectMenu = true
                     }
                     .foregroundColor(Color.cardEnable)
                     .font(Font.appMedium(size: 20))
                     
                     Spacer()
+                    
+                    if(!activeTimeTable.isEmpty) {
+                        Button("Обновить") {
+                            postRequest(action: "get_timetable", values: ["id":"\(activeTimeTable.tableID!)"], onSucsess: { data, response, error in
+                                if let data = data {
+                                    let json = String(data: data, encoding: .utf8)!
+                                    
+                                    let request = try! JSONDecoder().decode(loadTableRequest.self, from: json.data(using: .utf8)!)
+                                    
+                                    if(request.error.code == 0) {
+                                        let json = toDictionary(data: data)!
+                                        
+                                        let tableData = try! JSONSerialization.data(withJSONObject: (json["timetable"] as! [String: Any])["json"] as! [String: Any], options: .prettyPrinted)
+
+                                        let loadTable = try! JSONDecoder().decode(TimeTable.self, from: tableData)
+                                        loadTable.tableID = (json["timetable"] as! [String: Any])["id"] as? Int
+                                        
+                                        DispatchQueue.main.async {
+                                            activeTimeTable.setValues(table: loadTable)
+                                            UserDefaults.standard.set(String(data: try! JSONEncoder().encode(activeTimeTable), encoding: .utf8)!, forKey: "timetable")
+                                            UserDefaults.standard.synchronize()
+                                        }
+                                    }
+                                }
+                            })
+                        }
+                        .foregroundColor(Color.cardEnable)
+                        .font(Font.appMedium(size: 16))
+                    }
                 }
                 .frame(height: 36)
                 .padding(EdgeInsets(top: 0, leading: 16, bottom: 8, trailing: 16))
                     
-                TableView(selectedDay: $selectedDay, activeTimeTable: $activeTimeTable, date: $date, isEditing: false)
+                TableView(selectedDay: $selectedDay, activeTimeTable: activeTimeTable, date: $date, isEditing: false)
             }
             .padding(EdgeInsets(top: 16, leading: 0, bottom: 0, trailing: 0))
             
@@ -56,12 +84,38 @@ struct TimeTableView: View {
         }
         .onAppear {
             date = Date(timeIntervalSinceNow: 0)
-            if(selectedDay == -1) {
-                selectedDay = date.weekDay - 1
+            
+            if(activeTimeTable.tableID ?? -1 >= 0) {
+                if(date.timeIntervalSince1970 - UserDefaults.standard.double(forKey: "lastUpdate") > 1000 * 60 * 10) {
+                    UserDefaults.standard.set(date.timeIntervalSince1970, forKey: "lastUpdate")
+                    
+                    postRequest(action: "get_timetable", values: ["id":"\(activeTimeTable.tableID!)"], onSucsess: { data, response, error in
+                        if let data = data {
+                            let json = String(data: data, encoding: .utf8)!
+                            
+                            let request = try! JSONDecoder().decode(loadTableRequest.self, from: json.data(using: .utf8)!)
+                            
+                            if(request.error.code == 0) {
+                                let json = toDictionary(data: data)!
+                                
+                                let tableData = try! JSONSerialization.data(withJSONObject: (json["timetable"] as! [String: Any])["json"] as! [String: Any], options: .prettyPrinted)
+
+                                let loadTable = try! JSONDecoder().decode(TimeTable.self, from: tableData)
+                                loadTable.tableID = (json["timetable"] as! [String: Any])["id"] as? Int
+                                
+                                DispatchQueue.main.async {
+                                    activeTimeTable.setValues(table: loadTable)
+                                    UserDefaults.standard.set(String(data: try! JSONEncoder().encode(activeTimeTable), encoding: .utf8)!, forKey: "timetable")
+                                    UserDefaults.standard.synchronize()
+                                }
+                            }
+                        }
+                    })
+                }
             }
         }
         .sheet(isPresented: $isSelectMenu, content: {
-            LoadTimeTableView(timeTable: $activeTimeTable)
+            LoadTimeTableView(timeTable: activeTimeTable)
         })
         .animation(.none)
         .background(Color.appBackground.ignoresSafeArea())
@@ -74,6 +128,7 @@ struct TimeTableView_Previews: PreviewProvider {
     @State static var timeTable: TimeTable = TimeTable.empty
     
     static var previews: some View {
-        TimeTableView(activeTimeTable: .constant(ServerTimeTable(id: -1, info: timeTable)))
+        TimeTableView()
+            .environmentObject(timeTable)
     }
 }

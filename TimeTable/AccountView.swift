@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import AuthenticationServices
 
 
 struct AccountView: View {
@@ -50,6 +51,7 @@ struct AccountView: View {
                 Spacer()
                 
                 HStack(alignment: .center) {
+                    
                     Button("Вход") {
                         isLoginingOpen = true
                     }
@@ -62,7 +64,7 @@ struct AccountView: View {
 
                     Spacer()
                         .frame(width: 8)
-                    
+
                     Button("Регистрация") {
                         isRegistrationOpen = true
                     }
@@ -84,7 +86,7 @@ struct AccountView: View {
                 
                 List() {
                     Section() {
-                        NavigationLink(destination: MyTimeTablesView()) {
+                        NavigationLink(destination: MyTimeTablesView(user: $person)) {
                             Label(title: {
                                 Text("Мои расписания")
                                     .foregroundColor(Color.cardEnable)
@@ -98,7 +100,25 @@ struct AccountView: View {
                                 .foregroundColor(Color.cardDisableLight)
                         )
                     }
+                    
+                    Section() {
+                        NavigationLink(destination: EmailView(user: $person)) {
+                            Label(title: {
+                                Text("Почта")
+                                    .foregroundColor(Color.cardEnable)
+                                    .font(Font.appMedium(size: 16))
+                            }, icon: {
+                                
+                            })
+                        }
+                        .listRowBackground(
+                            RoundedRectangle(cornerRadius: 8, style: .continuous)
+                                .foregroundColor(Color.cardDisableLight)
+                        )
+                    }
                 }
+                .listStyle(InsetGroupedListStyle())
+
             }
         }
         .navigationBarBackButtonHidden(true)

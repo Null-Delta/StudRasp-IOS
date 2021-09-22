@@ -8,7 +8,11 @@
 import SwiftUI
 
 struct MainMenu: View {
-    @State var timeTable: ServerTimeTable = ServerTimeTable(id: -1, info: TimeTable.empty)
+    @StateObject var timeTable: TimeTable = TimeTable.empty
+    
+    @State var isAddingTable: Bool = false
+
+    @State var addingCode: String = ""
                 
     init() {
         let tabBarAppeareance = UITabBarAppearance()
@@ -27,7 +31,7 @@ struct MainMenu: View {
     var body: some View {
         VStack {
             TabView() {
-                TimeTableView(activeTimeTable: $timeTable, selectedDay: Date(timeIntervalSinceNow: 0).weekDay - 1)
+                TimeTableView()
                     .tabItem {
                         Image("home")
                     }
@@ -41,9 +45,22 @@ struct MainMenu: View {
             .background(Color.appBackground)
             .tabViewStyle(DefaultTabViewStyle())
             .onAppear {
-                timeTable = try! JSONDecoder().decode(ServerTimeTable.self, from: (UserDefaults.standard.string(forKey: "timetable") ?? String(data: JSONEncoder().encode(ServerTimeTable(id: -1, info: TimeTable.empty)), encoding: .utf8)!).data(using: .utf8)!)
+                timeTable.setValues(table: try! JSONDecoder().decode(TimeTable.self, from: (UserDefaults.standard.string(forKey: "timetable") ?? String(data: JSONEncoder().encode(TimeTable.empty), encoding: .utf8)!).data(using: .utf8)!))
             }
         }
+        .environmentObject(timeTable)
+        .onOpenURL(perform: {url in
+            if(url.absoluteString.hasPrefix("studrasp://addTable/") && !isAddingTable) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    addingCode = url.lastPathComponent
+                    isAddingTable = true
+                }
+            }
+        })
+        .sheet(isPresented: $isAddingTable, onDismiss: nil, content: {
+            TablePreviewView(code: $addingCode)
+                .environmentObject(timeTable)
+        })
     }
 }
 

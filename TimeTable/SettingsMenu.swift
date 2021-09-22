@@ -25,7 +25,7 @@ struct SettingsMenu: View {
                         .foregroundColor(Color.cardEnable)
                         .font(Font.appBold(size: 24))
                     
-                    Text("v0.9.5 (beta)")
+                    Text("v1.0 (beta)")
                         .foregroundColor(Color.cardEnableLight)
                         .font(Font.appBold(size: 16))
                     

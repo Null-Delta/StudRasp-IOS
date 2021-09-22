@@ -11,44 +11,71 @@ import UIKit
 
 var mainDomain: String = "studrasp.ru"
 
-struct Lesson: Codable {
-    var name: String
-    var teacherName: String
-    var audience: String
-    var type: String
-    var index: Int?
+// MARK: - Day
+struct Day: Codable, Equatable {
+    static func == (lhs: Day, rhs: Day) -> Bool {
+        return lhs.lessons1 == rhs.lessons1 && lhs.lessons2 == rhs.lessons2
+    }
     
-    var start: Int
-    var end: Int
+    var lessons1, lessons2: [Lesson]
+
+    func getLessons(date: Date, index: Int) -> [Lesson] {
+        return date.weekIndex == 0 ? index == 0 ? lessons1 : lessons2 : index == 0 ? lessons2 : lessons1
+    }
     
-    static var empty: Lesson {
-        get {
-            return Lesson(name: "", teacherName: "", audience: "", type: "", index: 0, start: 0, end: 0)
+    mutating func changeLessons(date: Date, index: Int, action: (inout [Lesson]) ->()) {
+        if(date.weekIndex != index) {
+            action(&lessons2)
+        } else {
+            action(&lessons1)
         }
     }
 }
 
-struct Day: Codable {
-    var lessons1: [Lesson]
-    var lessons2: [Lesson]
+// MARK: - Lesson
+struct Lesson: Codable, Equatable {
+    var name, teacherName, audience, type: String
+    var lessonNumber: Int
     
-    func getLessons(date: Date, index: Int) -> [Lesson] {
-        return date.weekIndex == 0 ? index == 0 ? lessons1 : lessons2 : index == 0 ? lessons2 : lessons1
+    static var empty: Lesson {
+        get {
+            return Lesson(name: "", teacherName: "", audience: "", type: "", lessonNumber: 0)
+        }
     }
 }
 
-struct TimeTable: Codable {
-    var name: String
-    var firstWeek: String
-    var secondWeek: String
+struct LessonTime: Codable, Equatable {
+    var start: Int
+    var end: Int
+}
+
+class TimeTable: Codable, ObservableObject, Equatable, Identifiable {
+    static func == (lhs: TimeTable, rhs: TimeTable) -> Bool {
+        lhs.name == rhs.name &&
+        lhs.firstWeek == rhs.firstWeek &&
+        lhs.secondWeek == rhs.secondWeek &&
+        lhs.days == rhs.days &&
+        lhs.tableID == rhs.tableID &&
+        lhs.lessonsTime == rhs.lessonsTime
+    }
     
-    var lastUpdateDate: String? = nil
+    @Published var name: String
+    @Published var firstWeek: String
+    @Published var secondWeek: String
+    @Published var days: [Day]
+    @Published var lessonsTime: [LessonTime]
     
-    var days: [Day]
+    var id: String? = UUID().uuidString
+    
+    
+    //@Published var times: [LessonTime]
+    
+    var tableID: Int?
+    var invite_code: String?
     
     static var empty: TimeTable {
         get {
-            return TimeTable(name: "", firstWeek: "", secondWeek: "", days: [
+            return TimeTable(days: [
                 Day(lessons1: [], lessons2: []),
                 Day(lessons1: [], lessons2: []),
                 Day(lessons1: [], lessons2: []),
@@ -56,30 +83,75 @@ struct TimeTable: Codable {
                 Day(lessons1: [], lessons2: []),
                 Day(lessons1: [], lessons2: []),
                 Day(lessons1: [], lessons2: [])
+            ], name: "", firstWeek: "", secondWeek: "", times: [
+                LessonTime(start: 480, end: 570),
+                LessonTime(start: 580, end: 670),
+                LessonTime(start: 690, end: 780),
+                LessonTime(start: 790, end: 880),
+                LessonTime(start: 900, end: 990),
+                LessonTime(start: 1000, end: 1090),
+                LessonTime(start: 1100, end: 1190),
+                LessonTime(start: 1200, end: 1290)
             ])
         }
     }
     
     var isEmpty: Bool {
         get {
-            return self.name.count == 0
+            self.name.count == 0
         }
     }
     
     func getWeekName(date: Date, index: Int) -> String {
         return date.weekIndex == 0 ? index == 0 ? firstWeek : secondWeek : index == 0 ? secondWeek : firstWeek
     }
-}
+    
+    enum CodingKeys: CodingKey {
+        case name, firstWeek, secondWeek, days, lessonsTime, tableID
+    }
 
-struct ServerTimeTable: Codable {
-    var id: Int
-    var info: TimeTable
+    init(days: [Day], name: String, firstWeek: String, secondWeek: String, times: [LessonTime]) {
+        self.days = days
+        self.name = name
+        self.firstWeek = firstWeek
+        self.secondWeek = secondWeek
+        self.lessonsTime = times
+    }
+
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        name = try container.decode(String.self, forKey: .name)
+        days = try container.decode([Day].self, forKey: .days)
+        firstWeek = try container.decode(String.self, forKey: .firstWeek)
+        secondWeek = try container.decode(String.self, forKey: .secondWeek)
+        lessonsTime = try container.decode([LessonTime].self, forKey: .lessonsTime)
+        tableID = try? container.decode(Optional<Int>.self, forKey: .tableID)
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(name, forKey: .name)
+        try container.encode(days, forKey: .days)
+        try container.encode(firstWeek, forKey: .firstWeek)
+        try container.encode(secondWeek, forKey: .secondWeek)
+        try container.encode(lessonsTime, forKey: .lessonsTime)
+        try container.encode(tableID, forKey: .tableID)
+    }
+    
+    func setValues(table: TimeTable) {
+        name = table.name
+        firstWeek = table.firstWeek
+        secondWeek = table.secondWeek
+        days = table.days
+        tableID = table.tableID
+    }
 }
 
 
 struct user: Codable {
     var login: String
     var session: String
+    var email: String?
     
     static var empty: user {
         get {
@@ -97,9 +169,9 @@ struct user: Codable {
 
 struct loadTableRequest: Codable {
     var error: error
-    var timetable: ServerTimeTable?
     var session: String?
     var login: String?
+    var email: String?
 }
 
 extension UINavigationController {
@@ -109,11 +181,33 @@ extension UINavigationController {
     }
 }
 
-
-class TableObserved: ObservableObject {
-    @Published var table: ServerTimeTable
+class globalTableInfo: Codable, Identifiable {
+    var name: String
+    var tableID: String
+    var invite_code: String?
+    var id: String? = UUID().uuidString
     
-    init(table tbl: ServerTimeTable) {
-        table = tbl
+    enum CodingKeys: CodingKey {
+        case name, id, invite_code
+    }
+    
+    init(name: String, tableID: String, invite_code: String?) {
+        self.name = name
+        self.tableID = tableID
+        self.invite_code = invite_code
+    }
+    
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        name = try container.decode(String.self, forKey: .name)
+        tableID = try container.decode(String.self, forKey: .id)
+        invite_code = try container.decode(String.self, forKey: .invite_code)
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(name, forKey: .name)
+        try container.encode(tableID, forKey: .id)
+        try container.encode(invite_code, forKey: .invite_code)
     }
 }
