@@ -94,7 +94,6 @@ struct EmailView: View {
                     } else {
                         //TODO: error
                     }
-
                 } else {
                     //TODO: error
                 }

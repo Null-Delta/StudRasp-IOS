@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-
 struct LoadTimeTableView: View {
     @State var code: String = ""
     @ObservedObject var timeTable: TimeTable
@@ -26,8 +25,6 @@ struct LoadTimeTableView: View {
                     TextField("", text: $code, onEditingChanged: { isEdit in
                         
                     })
-                        
-                        .keyboardType(.numberPad)
                         .foregroundColor(Color.cardEnable)
                         .font(Font.appMedium(size: 20))
                         .padding(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
@@ -41,7 +38,7 @@ struct LoadTimeTableView: View {
                 Button(action: {
                     isSearching = true
                     
-                    postRequest(action: "get_timetable", values: ["id":"\(code)"], onSucsess: { data, response, error in
+                    postRequest(action: "get_timetable_by_invite_code", values: ["invite_code":"\(code)"], onSucsess: { data, response, error in
                         isSearching = false
                         if let data = data {
                             let json = String(data: data, encoding: .utf8)!

@@ -30,12 +30,27 @@ struct Week: View {
         } else if(isEditing) {
             return .highlight
         }
-                
+ 
         return (date.weekDay - 1 != dayIndex) ? .highlight :
         (date.minutes < activeTimeTable.lessonsTime[lesson - 1].start &&
-         ((activeTimeTable.days[dayIndex].getLessons(date: date, index: isWeekNow ? 0 : 1).first(where: {l in l.lessonNumber < lesson}) == nil) || date.minutes > activeTimeTable.lessonsTime[lesson - 2].end)) ? .wait :
+         ((activeTimeTable.days[dayIndex].getLessons(date: date, index: isWeekNow ? 0 : 1).first(where: {l in l.lessonNumber < lesson}) == nil) || date.minutes > activeTimeTable.lessonsTime[getlastLesson(day: dayIndex,nowLesson: lesson) - 1].end)) ? .wait :
         (date.minutes >= activeTimeTable.lessonsTime[lesson - 1].start &&
          date.minutes <= activeTimeTable.lessonsTime[lesson - 1].end) ? .active : .highlight
+    }
+    
+    func getlastLesson(day: Int,nowLesson: Int) -> Int {
+        var max = -1;
+        
+        for i in 0..<activeTimeTable.days[day].getLessons(date: date, index: isWeekNow ? 0 : 1).count {
+            if(activeTimeTable.days[day].getLessons(date: date, index: isWeekNow ? 0 : 1)[i].lessonNumber > max && activeTimeTable.days[day].getLessons(date: date, index: isWeekNow ? 0 : 1)[i].lessonNumber < nowLesson) {
+                max = activeTimeTable.days[day].getLessons(date: date, index: isWeekNow ? 0 : 1)[i].lessonNumber
+            }
+        }
+        
+        return max
+        //return activeTimeTable.days[day].getLessons(date: date, index: isWeekNow ? 0 : 1)
+          //  .max(by: {l1, l2 in l1.lessonNumber > l2.lessonNumber && l1.lessonNumber < nowLesson && l2.lessonNumber < nowLesson})!
+           // .lessonNumber
     }
     
     func isLesson(dayIndex: Int, lesson: Int) -> Bool {

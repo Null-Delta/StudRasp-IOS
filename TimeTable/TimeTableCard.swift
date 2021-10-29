@@ -67,9 +67,7 @@ struct TimeTableCard: View {
         .frame(minWidth: 0, idealWidth: .infinity, maxWidth: .infinity)
         .actionSheet(isPresented: $isActionsOpen, content: {
             var btns = [
-//                ActionSheet.Button.default(Text("Использовать"), action: {
-//                    onSet()
-//                }),
+
                 ActionSheet.Button.destructive(Text("Удалить"), action: {
                     onDelete()
                 }),
@@ -82,8 +80,8 @@ struct TimeTableCard: View {
             }
             
             if state != .local  {
-                btns.insert(Alert.Button.default(Text("Копировать ссылку"), action:  {
-                    UIPasteboard.general.string = "studrasp://addTable/" + code!
+                btns.insert(Alert.Button.default(Text("Копировать код"), action:  {
+                    UIPasteboard.general.string = code!
                 }), at: 0)
             }
             
@@ -91,6 +89,12 @@ struct TimeTableCard: View {
                 btns.insert(Alert.Button.destructive(Text("Удалить изменения"), action:  {
                     onChangesDelete()
                 }), at: btns.count - 2)
+            }
+            
+            if state == .changed || state == .global {
+                btns.insert(ActionSheet.Button.default(Text("Использовать"), action: {
+                    onSet()
+                }), at: 0)
             }
             return ActionSheet(title: Text(name), message: nil, buttons: btns)
         })

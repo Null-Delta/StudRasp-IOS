@@ -93,7 +93,7 @@ struct SettingsView: View {
                             .padding(EdgeInsets(top: 0, leading: 0, bottom: 16, trailing: 0))
                         
                         HStack {
-                            Text("Перыая неделя")
+                            Text("Первая неделя")
                                 .foregroundColor(.cardEnable)
                                 .font(Font.appMedium(size: 16))
                             

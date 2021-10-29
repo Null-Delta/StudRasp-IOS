@@ -61,7 +61,6 @@ struct Card: View {
                         RoundedRectangle(cornerRadius: 8, style: .continuous)
                             .foregroundColor(state == .select ? Color.clear : (state == .highlight || state == .wait) ? Color.cardDisable : Color.cardEnable)
                             .shadow(color: Color.shadow.opacity( state == .active ? 1 : 0), radius: 8, x: 0, y: 4)
-
                             
                         VStack(spacing: 12) {
                             if(state == .select) {

@@ -179,7 +179,7 @@ struct RegistrationView: View {
                     Spacer()
                 }
                 
-                TextField("", text: $password)
+                SecureField("", text: $password)
                     .frame(height: 36, alignment: .center)
                     .padding(EdgeInsets(top: 0, leading: 12, bottom: 0, trailing: 12))
                     .background(
@@ -213,7 +213,7 @@ struct RegistrationView: View {
     }
     
     func checkPassword(val: String) -> Bool {
-        let redex = try! NSRegularExpression(pattern: #"(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[\.,()!@#$%^&*])([a-zA-Z0-9\.,()!@#$%^&*]){8}"#)
+        let redex = try! NSRegularExpression(pattern: #"(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])([a-zA-Z0-9\.,()!@#$%^&*]){8}"#)
         return NSRegularExpression.numberOfMatches(redex)(in: val, options: .anchored, range: NSRange(location: 0, length: val.count)) != 0
     }
     
@@ -229,7 +229,7 @@ struct RegistrationView: View {
             return "Введена некорректная почта"
         }
         else if password.count > 0 && !checkPassword(val: password) {
-            return "Введен некорректный пароль. Пароль должен быть длиной минимум 8 символов, сожержать хотябы одно число, заглавную, прописную буквы и спец. символ: \n.,()!@#$%^&* "
+            return "Введен некорректный пароль. Пароль должен быть длиной минимум 8 символов, сожержать хотябы одно число, заглавную и прописную буквы"
         }
         return ""
     }

@@ -74,132 +74,140 @@ struct MyTablesList: View {
     @Binding var user: user
     @Binding var isErrorShow: Bool
     @Binding var errorMessage: String
+    @State var code: String = ""
+    @State var isSelectedTable: Bool = false
     
     var body: some View {
         ScrollView() {
             VStack(spacing: 0) {
-                    VStack(spacing: 8) {
-                        HStack {
-                            Text("Опубликованые")
+                VStack(spacing: 8) {
+                    HStack {
+                        Text("Опубликованые")
+                            .foregroundColor(Color.cardEnableLight)
+                            .font(Font.appBold(size: 16))
+                            .frame(height: 36)
+                        
+                        Spacer()
+                        
+                        Button(action: {
+                            postRequest(action: "get_my_timetables", values: ["login":"\(user.login)", "session":"\(user.session)"], onSucsess: { data, responce, error in
+                                if let data = data {
+                                    let result = try! JSONDecoder().decode(loadTableRequest.self, from: data)
+
+                                    if(result.error.code != 0) {
+                                        errorMessage = result.error.message
+                                        isErrorShow = true
+                                    } else {
+                                        let json = toDictionary(data: data)!
+                                        user.session = json["session"] as! String
+                                        let tableData = try! JSONSerialization.data(withJSONObject: json["timeTables"] as! [[String: Any]], options: .prettyPrinted)
+                                        let tbls :[globalTableInfo] = try! JSONDecoder().decode([globalTableInfo].self, from: tableData)
+                                         
+                                        DispatchQueue.main.async {
+                                            tables.globalTables = tbls
+                                            tables.saveArray(state: .global)
+                                            tables.objectWillChange.send()
+                                        }
+                                    }
+                                } else {
+                                    errorMessage = "Не удалось отправить запрос, проверьте соединение с интернетом и попробуйте снова"
+                                    isErrorShow = true
+                                }
+                            })
+                        }, label: {
+                            Text("Обновить")
                                 .foregroundColor(Color.cardEnable)
                                 .font(Font.appBold(size: 16))
-                                .frame(height: 36)
-                            
-                            Spacer()
-                            
-                            Button(action: {
-                                postRequest(action: "get_my_timetables", values: ["login":"\(user.login)", "session":"\(user.session)"], onSucsess: { data, responce, error in
-                                    if let data = data {
-                                        let result = try! JSONDecoder().decode(loadTableRequest.self, from: data)
-
-                                        if(result.error.code != 0) {
-                                            errorMessage = result.error.message
-                                            isErrorShow = true
-                                        } else {
-                                            let json = toDictionary(data: data)!
-                                            user.session = json["session"] as! String
-                                            let tableData = try! JSONSerialization.data(withJSONObject: json["timeTables"] as! [[String: Any]], options: .prettyPrinted)
-                                            let tbls :[globalTableInfo] = try! JSONDecoder().decode([globalTableInfo].self, from: tableData)
-                                             
-                                            DispatchQueue.main.async {
-                                                tables.globalTables = tbls
-                                                tables.saveArray(state: .global)
-                                                tables.objectWillChange.send()
-                                            }
-                                        }
-                                    } else {
-                                        errorMessage = "Не удалось отправить запрос, проверьте соединение с интернетом и попробуйте снова"
-                                        isErrorShow = true
-                                    }
-                                })
-                            }, label: {
-                                Text("Обновить")
-                            })
-                        }
+                        })
+                    }
+                    
+                    ForEach($tables.globalTables, id: \.id) { table in
+                        let isLoad = tables.isLoad(id: table.tableID.wrappedValue)
+                        let isChange = isLoad ? tables.globalSavedTables.first(where: {t in t.id == Int(table.tableID.wrappedValue)!})!.isChange : false
                         
-                        ForEach($tables.globalTables, id: \.id) { table in
-                            let isLoad = tables.isLoad(id: table.tableID.wrappedValue)
-                            let isChange = isLoad ? tables.globalSavedTables.first(where: {t in t.id == Int(table.tableID.wrappedValue)!})!.isChange : false
-                            
-                            TimeTableCard(state: .constant(isChange ? .changed : .global), name: isChange ? $tables.globalSavedTables[tables.globalSavedTables.firstIndex(where: {t in
-                                t.id == Int(table.tableID.wrappedValue)!
-                            })!].table.name : table.name, code: table.invite_code, onDelete: {
-                                postRequest(action: "delete_timetable", values: ["login":user.login, "session": "\(user.session)", "id":table.tableID.wrappedValue], onSucsess: {data, response, error in
+                        TimeTableCard(state: .constant(isChange ? .changed : .global), name: isChange ? $tables.globalSavedTables[tables.globalSavedTables.firstIndex(where: {t in
+                            t.id == Int(table.tableID.wrappedValue)!
+                        })!].table.name : table.name, code: table.invite_code, onDelete: {
+                            postRequest(action: "delete_timetable", values: ["login":user.login, "session": "\(user.session)", "id":table.tableID.wrappedValue], onSucsess: {data, response, error in
 
-                                    if let data = data {
-                                        let result = try! JSONDecoder().decode(loadTableRequest.self, from: data)
+                                if let data = data {
+                                    let result = try! JSONDecoder().decode(loadTableRequest.self, from: data)
 
-                                        if(result.error.code != 0) {
-                                            errorMessage = result.error.message
-                                            isErrorShow = true
-                                        } else {
-                                            DispatchQueue.main.async {
-                                                tables.globalSavedTables.removeAll(where: {val in
-                                                    val.id == Int(table.tableID.wrappedValue)!
-                                                })
-                                                tables.globalTables.removeAll(where: {val in val.tableID == table.tableID.wrappedValue})
-                                                tables.saveArray(state: .global)
-                                                tables.objectWillChange.send()
-                                            }
-                                        }
-                                    } else {
-                                        errorMessage = "Не удалось отправить запрос, проверьте соединение с интернетом и попробуйте снова"
+                                    if(result.error.code != 0) {
+                                        errorMessage = result.error.message
                                         isErrorShow = true
-                                    }
-                                })
-                            }, onShare: {
-                                postRequest(action: "update_timetable", values: [
-                                    "login":user.login,
-                                    "session": user.session,
-                                    "id": table.tableID.wrappedValue,
-                                    "json": String(data: try! JSONEncoder().encode(tables.globalSavedTables[tables.globalSavedTables.firstIndex(where: {val in val.id == Int(table.tableID.wrappedValue)!})!].table), encoding: .utf8)!
-                                ], onSucsess: {data, sresponse, error in
-                                    if let data = data {
-                                        let result = try! JSONDecoder().decode(loadTableRequest.self, from: data)
-
-                                        if(result.error.code == 0) {
-                                            DispatchQueue.main.async {
-                                                tables.globalTables[tables.globalTables.firstIndex(where: {t in
-                                                    t.tableID == table.tableID.wrappedValue
-                                                })!].name = tables.globalSavedTables.first(where: {val in
-                                                    val.id == Int(table.tableID.wrappedValue)!
-                                                })!.table.name
-                                                
-                                                tables.globalSavedTables.removeAll(where: {val in
-                                                    val.id == Int(table.tableID.wrappedValue)!
-                                                })
-
-                                                tables.clearSaves()
-                                                
-                                                tables.saveArray(state: .global)
-                                                tables.objectWillChange.send()
-                                            }
-                                        } else {
-                                            errorMessage = result.error.message
-                                            isErrorShow = true
-                                        }
                                     } else {
-                                        errorMessage = "Не удалось отправить запрос, проверьте соединение с интернетом и попробуйте снова"
-                                        isErrorShow = true
+                                        DispatchQueue.main.async {
+                                            tables.globalSavedTables.removeAll(where: {val in
+                                                val.id == Int(table.tableID.wrappedValue)!
+                                            })
+                                            tables.globalTables.removeAll(where: {val in val.tableID == table.tableID.wrappedValue})
+                                            tables.saveArray(state: .global)
+                                            tables.objectWillChange.send()
+                                        }
                                     }
-                                })
-                            }, onSet: {
-                                
-                            }, onChangesDelete: {
-                                tables.globalSavedTables.removeAll(where: {val in
-                                    val.id == Int(table.tableID.wrappedValue)!
-                                })
-
-                                tables.clearSaves()
-                                
-                                tables.saveArray(state: .global)
-                                tables.objectWillChange.send()
+                                } else {
+                                    errorMessage = "Не удалось отправить запрос, проверьте соединение с интернетом и попробуйте снова"
+                                    isErrorShow = true
+                                }
                             })
-                                .onTapGesture {
-                                    print("here2")
+                        }, onShare: {
+                            postRequest(action: "update_timetable", values: [
+                                "login":user.login,
+                                "session": user.session,
+                                "id": table.tableID.wrappedValue,
+                                "json": String(data: try! JSONEncoder().encode(tables.globalSavedTables[tables.globalSavedTables.firstIndex(where: {val in val.id == Int(table.tableID.wrappedValue)!})!].table), encoding: .utf8)!
+                            ], onSucsess: {data, sresponse, error in
+                                if let data = data {
+                                    let result = try! JSONDecoder().decode(loadTableRequest.self, from: data)
 
-                                    postRequest(action: "get_timetable", values: ["id":table.tableID.wrappedValue], onSucsess: {data, response, error in
-                                        if let data = data {
+                                    if(result.error.code == 0) {
+                                        DispatchQueue.main.async {
+                                            tables.globalTables[tables.globalTables.firstIndex(where: {t in
+                                                t.tableID == table.tableID.wrappedValue
+                                            })!].name = tables.globalSavedTables.first(where: {val in
+                                                val.id == Int(table.tableID.wrappedValue)!
+                                            })!.table.name
+                                            
+                                            tables.globalSavedTables.removeAll(where: {val in
+                                                val.id == Int(table.tableID.wrappedValue)!
+                                            })
+
+                                            tables.clearSaves()
+                                            
+                                            tables.saveArray(state: .global)
+                                            tables.objectWillChange.send()
+                                        }
+                                    } else {
+                                        errorMessage = result.error.message
+                                        isErrorShow = true
+                                    }
+                                } else {
+                                    errorMessage = "Не удалось отправить запрос, проверьте соединение с интернетом и попробуйте снова"
+                                    isErrorShow = true
+                                }
+                            })
+                        }, onSet: {
+                            code = table.wrappedValue.invite_code!
+                            isSelectedTable = true
+                            
+                        }, onChangesDelete: {
+                            tables.globalSavedTables.removeAll(where: {val in
+                                val.id == Int(table.tableID.wrappedValue)!
+                            })
+
+                            tables.clearSaves()
+                            
+                            tables.saveArray(state: .global)
+                            tables.objectWillChange.send()
+                        })
+                            .onTapGesture {
+                                postRequest(action: "get_timetable", values: ["id":table.tableID.wrappedValue], onSucsess: {data, response, error in
+                                    if let data = data {
+                                        
+                                        let request = try! JSONDecoder().decode(loadTableRequest.self, from: data)
+                                        
+                                        if(request.error.code == 0) {
                                             let json = toDictionary(data: data)!
 
                                             let tableData = try! JSONSerialization.data(withJSONObject: (json["timetable"] as! [String: Any])["json"] as! [String: Any], options: .prettyPrinted)
@@ -212,6 +220,9 @@ struct MyTablesList: View {
                                             loadTable2.invite_code = table.invite_code.wrappedValue
 
                                             DispatchQueue.main.async {
+                                                tables.globalSavedTables.removeAll { savedTableInfo in
+                                                    savedTableInfo.id == loadTable.tableID
+                                                }
                                                 tables.globalSavedTables.append(savedTableInfo(id: loadTable.tableID!, loaded: loadTable, table: loadTable2))
                                                 tables.saveArray(state: .global)
 
@@ -222,77 +233,84 @@ struct MyTablesList: View {
                                                 })!
                                                 isEditorOpen = true
                                             }
-                                        }
-                                    })
-                                }
-                        }
-                    
-                        if(tables.globalTables.count == 0)  {
-                            Text("Расписаний нет")
-                                .padding(16)
-                                .foregroundColor(Color.cardEnableLight)
-                        }
-                    }
-                
-                    VStack(spacing: 8) {
-                        HStack {
-                            Text("На устройстве")
-                                .foregroundColor(Color.cardEnable)
-                                .font(Font.appBold(size: 16))
-                                .frame(height: 36)
-                            Spacer()
-                        }
-                        
-                      
-                        ForEach($tables.localTables, id: \.id) { table in
-                            TimeTableCard(state: .constant(.local), name: table.name, code: .constant(""), onDelete: {
-                                tables.localTables.removeAll(where: {t in t === table.wrappedValue})
-                                tables.saveArray(state: .local)
-                            }, onShare: {
-                                postRequest(action: "create_timetable", values: ["login":user.login, "session": user.session, "json": String(data: try! JSONEncoder().encode(table.wrappedValue), encoding: .utf8)!], onSucsess: {data, response, error in
-
-                                    if let data = data {
-                                        let result = try! JSONDecoder().decode(loadTableRequest.self, from: data)
-                                        let json = toDictionary(data: data)!
-                                                                                
-                                        if(result.error.code != 0) {
-                                            errorMessage = result.error.message
-                                            isErrorShow = true
                                         } else {
-                                            DispatchQueue.main.async {
-                                                tables.globalTables.append(globalTableInfo(name: table.name.wrappedValue, tableID: json["id"] as! String, invite_code: json["invite_code"] as? String))
-                                                
-                                                tables.localTables.removeAll(where: {t in t === table.wrappedValue})
-                                            
-                                                tables.saveArray(state: .global)
-                                                tables.saveArray(state: .local)
-                                                tables.objectWillChange.send()
-                                            }
-
+                                            errorMessage = request.error.message
+                                            isErrorShow = true
                                         }
-
-                                    } else {
-                                        errorMessage = "Не удалось отправить запрос, проверьте соединение с интернетом и попробуйте снова"
-                                        isErrorShow = true
                                     }
                                 })
-                            })
-                                .onTapGesture {
-                                    tables.selectedID = -1
-                                    tables.selectedType = .local
-                                    tables.selectedTable = tables.localTables.firstIndex(where: {t in t === table.wrappedValue})!
-                                    isEditorOpen = true
-                                }
-                        }
-                        
-                        if(tables.localTables.count == 0)  {
-                            Text("Расписаний нет")
-                                .padding(16)
-                                .foregroundColor(Color.cardEnableLight)
-                        }
+                            }
                     }
+                
+                    if(tables.globalTables.count == 0)  {
+                        Text("Расписаний нет")
+                            .padding(16)
+                            .foregroundColor(Color.cardEnableLight)
+                    }
+                }
+            
+                VStack(spacing: 8) {
+                    HStack {
+                        Text("На устройстве")
+                            .foregroundColor(Color.cardEnableLight)
+                            .font(Font.appBold(size: 16))
+                            .frame(height: 36)
+                        Spacer()
+                    }
+                    
+                  
+                    ForEach($tables.localTables, id: \.id) { table in
+                        TimeTableCard(state: .constant(.local), name: table.name, code: .constant(""), onDelete: {
+                            tables.localTables.removeAll(where: {t in t === table.wrappedValue})
+                            tables.saveArray(state: .local)
+                        }, onShare: {
+                            postRequest(action: "create_timetable", values: ["login":user.login, "session": user.session, "json": String(data: try! JSONEncoder().encode(table.wrappedValue), encoding: .utf8)!], onSucsess: {data, response, error in
+
+                                if let data = data {
+                                    let result = try! JSONDecoder().decode(loadTableRequest.self, from: data)
+                                    let json = toDictionary(data: data)!
+                                                                            
+                                    if(result.error.code != 0) {
+                                        errorMessage = result.error.message
+                                        isErrorShow = true
+                                    } else {
+                                        DispatchQueue.main.async {
+                                            tables.globalTables.append(globalTableInfo(name: table.name.wrappedValue, tableID: json["id"] as! String, invite_code: json["invite_code"] as? String))
+                                            
+                                            tables.localTables.removeAll(where: {t in t === table.wrappedValue})
+                                        
+                                            tables.saveArray(state: .global)
+                                            tables.saveArray(state: .local)
+                                            tables.objectWillChange.send()
+                                        }
+
+                                    }
+
+                                } else {
+                                    errorMessage = "Не удалось отправить запрос, проверьте соединение с интернетом и попробуйте снова"
+                                    isErrorShow = true
+                                }
+                            })
+                        })
+                            .onTapGesture {
+                                tables.selectedID = -1
+                                tables.selectedType = .local
+                                tables.selectedTable = tables.localTables.firstIndex(where: {t in t === table.wrappedValue})!
+                                isEditorOpen = true
+                            }
+                    }
+                    
+                    if(tables.localTables.count == 0)  {
+                        Text("Расписаний нет")
+                            .padding(16)
+                            .foregroundColor(Color.cardEnableLight)
+                    }
+                }
             }
             .padding(EdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16))
+        }
+        .sheet(isPresented: $isSelectedTable) {
+            TablePreviewView(code: $code)
         }
     }
 }
@@ -393,7 +411,6 @@ struct MyTimeTablesView: View {
                     }
                 }
             })
-            
         }
         .alert(isPresented: $isErrorShow, content: {
             Alert(title: Text("Ошибка"),

@@ -144,6 +144,7 @@ class TimeTable: Codable, ObservableObject, Equatable, Identifiable {
         secondWeek = table.secondWeek
         days = table.days
         tableID = table.tableID
+        lessonsTime = table.lessonsTime
     }
 }
 

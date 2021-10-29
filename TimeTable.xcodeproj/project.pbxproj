@@ -10,7 +10,6 @@
 		950DC57526E11C7900682F5A /* AccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 950DC57426E11C7900682F5A /* AccountView.swift */; };
 		950DC57826E139EF00682F5A /* LoadTimeTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 950DC57726E139EF00682F5A /* LoadTimeTableView.swift */; };
 		9521B8AD26EE6A1000685EC2 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9521B8AC26EE6A1000685EC2 /* SettingsView.swift */; };
-		953575C526DF9EEB004C12B2 /* TimeTableApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 953575C426DF9EEB004C12B2 /* TimeTableApp.swift */; };
 		953575C926DF9EEC004C12B2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 953575C826DF9EEC004C12B2 /* Assets.xcassets */; };
 		953575CC26DF9EEC004C12B2 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 953575CB26DF9EEC004C12B2 /* Preview Assets.xcassets */; };
 		953575D426DF9F0A004C12B2 /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = 953575D326DF9F0A004C12B2 /* Card.swift */; };
@@ -30,6 +29,7 @@
 		95B0EE8126EBB0C3005E61CA /* NewLessonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95B0EE8026EBB0C3005E61CA /* NewLessonView.swift */; };
 		95C3CC8226E924C900B96F69 /* MyTimeTablesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95C3CC8126E924C900B96F69 /* MyTimeTablesView.swift */; };
 		95C3CC8426E94C6700B96F69 /* TimeTableCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95C3CC8326E94C6700B96F69 /* TimeTableCard.swift */; };
+		95D034E727024EC80080E389 /* TimeTableApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 953575C426DF9EEB004C12B2 /* TimeTableApp.swift */; };
 		95DB2B4A26E105A00068AE39 /* SettingsMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95DB2B4926E105A00068AE39 /* SettingsMenu.swift */; };
 		95F2F57426E04E9D0009D85A /* WeekView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95F2F57326E04E9D0009D85A /* WeekView.swift */; };
 		95F90BC626F1423E008F8D36 /* TablePreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95F90BC526F1423E008F8D36 /* TablePreviewView.swift */; };
@@ -259,6 +259,7 @@
 				953575DF26DFB396004C12B2 /* TimeTableStruct.swift in Sources */,
 				953575E126E00AB5004C12B2 /* MainMenu.swift in Sources */,
 				95798A6A26EBF53700EF80E5 /* values.swift in Sources */,
+				95D034E727024EC80080E389 /* TimeTableApp.swift in Sources */,
 				959294B026EB9FCF009CACCD /* TimeTableEditor.swift in Sources */,
 				953575DA26DFA369004C12B2 /* Extensions.swift in Sources */,
 				950DC57526E11C7900682F5A /* AccountView.swift in Sources */,
@@ -269,7 +270,6 @@
 				95F2F57426E04E9D0009D85A /* WeekView.swift in Sources */,
 				953575D426DF9F0A004C12B2 /* Card.swift in Sources */,
 				95C3CC8226E924C900B96F69 /* MyTimeTablesView.swift in Sources */,
-				953575C526DF9EEB004C12B2 /* TimeTableApp.swift in Sources */,
 				95F90BC826F1A452008F8D36 /* EmailView.swift in Sources */,
 				950DC57826E139EF00682F5A /* LoadTimeTableView.swift in Sources */,
 				953575E326E00B2C004C12B2 /* TimeTableView.swift in Sources */,
@@ -331,7 +331,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.2;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -386,7 +386,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -402,20 +402,22 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = TimeTable/TimeTable.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_ASSET_PATHS = "\"TimeTable/Preview Content\"";
 				DEVELOPMENT_TEAM = G7668ALM57;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = TimeTable/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.null.zed.StudRasp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -427,20 +429,22 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = TimeTable/TimeTable.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_ASSET_PATHS = "\"TimeTable/Preview Content\"";
 				DEVELOPMENT_TEAM = G7668ALM57;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = TimeTable/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.null.zed.StudRasp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};

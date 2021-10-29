@@ -70,7 +70,7 @@ struct TimeSettingsView: View {
                         Spacer()
                         
                         DatePicker(selection: $dates[index].0, displayedComponents: .hourAndMinute, label: {
-                            Text("Начало:")
+                            Text("От:")
                                 .fixedSize()
                                 .font(Font.appMedium(size: 16))
                                 .foregroundColor(Color.cardEnableLight)
@@ -80,7 +80,7 @@ struct TimeSettingsView: View {
                             .accentColor(Color.cardEnable)
                         
                         DatePicker(selection: $dates[index].1, displayedComponents: .hourAndMinute, label: {
-                            Text("Конец:")
+                            Text("До:")
                                 .fixedSize()
                                 .font(Font.appMedium(size: 16))
                                 .foregroundColor(Color.cardEnableLight)

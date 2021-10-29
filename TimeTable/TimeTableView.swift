@@ -16,26 +16,21 @@ struct TimeTableView: View {
     @State var nowLesson: CardState = .wait
     @State var isSelectMenu = false
     
+    @State var errorText: String = ""
+    @State var isErrorShow: Bool = false
+    
     let timer = Timer.publish(every: 10, on: .main, in: .common).autoconnect()
     
     var body: some View {
         ZStack {
             VStack(alignment: .leading, spacing: 8) {
-                HStack {
-                    Text("Расписание")
-                        .foregroundColor(Color.cardEnable)
-                        .font(Font.appBlack(size: 32))
-                    
-                    Spacer()
-                }
-                .padding(EdgeInsets(top: 0, leading: 16, bottom: 8, trailing: 16))
-                
+
                 HStack {
                     Button(activeTimeTable.isEmpty ? "Выбрать" : activeTimeTable.name) {
                         isSelectMenu = true
                     }
                     .foregroundColor(Color.cardEnable)
-                    .font(Font.appMedium(size: 20))
+                    .font(Font.appBold(size: 24))
                     
                     Spacer()
                     
@@ -60,6 +55,9 @@ struct TimeTableView: View {
                                             UserDefaults.standard.set(String(data: try! JSONEncoder().encode(activeTimeTable), encoding: .utf8)!, forKey: "timetable")
                                             UserDefaults.standard.synchronize()
                                         }
+                                    } else {
+                                        errorText = request.error.message
+                                        isErrorShow = true
                                     }
                                 }
                             })
@@ -119,6 +117,9 @@ struct TimeTableView: View {
         })
         .animation(.none)
         .background(Color.appBackground.ignoresSafeArea())
+        .alert(isPresented: $isErrorShow) {
+            Alert(title: Text("Ошибка"), message: Text(errorText), dismissButton: .cancel())
+        }
 
     }
 }
