@@ -25,6 +25,18 @@ struct TimeTableEditor: View {
             VStack {
                 HStack(spacing: 0) {
                     Button(action: {
+                        
+                        if(tables.selectedType == .local) {
+                            if(tables.selectedID == timeTable.tableID) {
+                                timeTable.setValues(table: tables.localTables.first(where: {t in t.tableID == tables.selectedID})!)
+                                
+                                UserDefaults.standard.set(String(data: try! JSONEncoder().encode(timeTable), encoding: .utf8)!, forKey: "timetable")
+                                UserDefaults.standard.synchronize()
+
+                                
+                            }
+                        }
+                        //print(timeTable.name)
                         tables.saveArray(state: tables.selectedType)
                         tables.objectWillChange.send()
                         

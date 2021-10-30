@@ -15,6 +15,8 @@ struct LoadTimeTableView: View {
     @State var isShowError: Bool = false
     @State var isSearching: Bool = false
     
+    var onChange: () -> () = {}
+    
     @Environment(\.presentationMode) var presentationMode
 
     var body: some View {
@@ -40,9 +42,12 @@ struct LoadTimeTableView: View {
                     
                     postRequest(action: "get_timetable_by_invite_code", values: ["invite_code":"\(code)"], onSucsess: { data, response, error in
                         isSearching = false
+                        
+
                         if let data = data {
                             let json = String(data: data, encoding: .utf8)!
-                            
+
+                            print(json)
                             let request = try! JSONDecoder().decode(loadTableRequest.self, from: json.data(using: .utf8)!)
                             
                             if(request.error.code == 0) {
@@ -52,14 +57,17 @@ struct LoadTimeTableView: View {
 
                                 let loadTable = try! JSONDecoder().decode(TimeTable.self, from: tableData)
                                 loadTable.tableID = (json["timetable"] as! [String: Any])["id"] as? Int
+                                loadTable.invite_code = code
                                 
                                 DispatchQueue.main.async {
                                     timeTable.setValues(table: loadTable)
+                                    
+                                    UserDefaults.standard.set(String(data: try! JSONEncoder().encode(timeTable), encoding: .utf8)!, forKey: "timetable")
+                                    UserDefaults.standard.synchronize()
+                                    
+                                    onChange()
                                 }
                                                                 
-                                UserDefaults.standard.set(String(data: try! JSONEncoder().encode(timeTable), encoding: .utf8)!, forKey: "timetable")
-                                UserDefaults.standard.synchronize()
-
                                 presentationMode.wrappedValue.dismiss()
                             } else {
                                 errorText = request.error.message
@@ -68,10 +76,8 @@ struct LoadTimeTableView: View {
                         } else {
                             errorText = "Не удалось отправить запрос, проверьте соединение с интернетом и попробуйте снова"
                             isShowError = true
-                            //login = error!.localizedDescription
                         }
                     })
-                    
                 }, label: {
                         Text("Добавить")
                             .font(Font.appMedium(size: 20))

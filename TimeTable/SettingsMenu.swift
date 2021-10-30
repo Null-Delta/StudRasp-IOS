@@ -24,11 +24,7 @@ struct SettingsMenu: View {
                     Text("StudRasp")
                         .foregroundColor(Color.cardEnable)
                         .font(Font.appBold(size: 24))
-                    
-                    Text("v1.0 (beta)")
-                        .foregroundColor(Color.cardEnableLight)
-                        .font(Font.appBold(size: 16))
-                    
+
                     List {
                         Section() {
                             NavigationLink(destination: AccountView()) {
@@ -47,7 +43,7 @@ struct SettingsMenu: View {
                         }
                         
                         Section() {
-                            NavigationLink(destination: AccountView()) {
+                            NavigationLink(destination: AboutView()) {
                                 Label(title: {
                                     Text("О Приложении")
                                         .foregroundColor(Color.cardEnable)
@@ -62,6 +58,7 @@ struct SettingsMenu: View {
                             )
                         }
                     }
+                    .background(Color.appBackground)
                     .listStyle(InsetGroupedListStyle())
                     .scaledToFit()
                     

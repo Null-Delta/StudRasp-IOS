@@ -9,11 +9,14 @@ import SwiftUI
 
 struct MainMenu: View {
     @StateObject var timeTable: TimeTable = TimeTable.empty
-    
-    @State var isAddingTable: Bool = false
 
+    @State var isAddingTable: Bool = false
+    @State var isAddingTableFile: Bool = false
+
+    @StateObject var addingTable: TimeTable = TimeTable.empty
+    
     @State var addingCode: String = ""
-                
+    
     init() {
         let tabBarAppeareance = UITabBarAppearance()
         tabBarAppeareance.configureWithTransparentBackground()
@@ -49,16 +52,27 @@ struct MainMenu: View {
             }
         }
         .environmentObject(timeTable)
+        
         .onOpenURL(perform: {url in
+            
             if(url.absoluteString.hasPrefix("studrasp://addTable/") && !isAddingTable) {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                     addingCode = url.lastPathComponent
                     isAddingTable = true
                 }
+            } else if(url.absoluteString.hasSuffix(".studrasp")) {
+                addingTable.setValues(table: try! JSONDecoder().decode(TimeTable.self, from: Data(contentsOf: url)))
+                isAddingTableFile = true
+                //TODO: IMPORT FILE
             }
         })
         .sheet(isPresented: $isAddingTable, onDismiss: nil, content: {
-            TablePreviewView(code: $addingCode)
+            TablePreviewView(code: $addingCode, timeTablePreview: TimeTable.empty)
+                .environmentObject(timeTable)
+        })
+        
+        .sheet(isPresented: $isAddingTableFile, onDismiss: nil, content: {
+            TablePreviewView(code: .constant(""), timeTablePreview: addingTable, isFileAdding: true)
                 .environmentObject(timeTable)
         })
     }

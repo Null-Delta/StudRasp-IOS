@@ -76,7 +76,9 @@ struct MyTablesList: View {
     @Binding var errorMessage: String
     @State var code: String = ""
     @State var isSelectedTable: Bool = false
-    
+    @State var isSelectedLocalTable: Bool = false
+    @StateObject var selectedLocalTable: TimeTable = .empty
+
     var body: some View {
         ScrollView() {
             VStack(spacing: 0) {
@@ -257,8 +259,6 @@ struct MyTablesList: View {
                             .frame(height: 36)
                         Spacer()
                     }
-                    
-                  
                     ForEach($tables.localTables, id: \.id) { table in
                         TimeTableCard(state: .constant(.local), name: table.name, code: .constant(""), onDelete: {
                             tables.localTables.removeAll(where: {t in t === table.wrappedValue})
@@ -285,15 +285,20 @@ struct MyTablesList: View {
                                         }
 
                                     }
-
                                 } else {
                                     errorMessage = "Не удалось отправить запрос, проверьте соединение с интернетом и попробуйте снова"
                                     isErrorShow = true
                                 }
                             })
+                        }, onSet: {
+                            
+                            selectedLocalTable.setValues(table: table.wrappedValue)
+                                                        
+                            isSelectedLocalTable = true
+                            
                         })
                             .onTapGesture {
-                                tables.selectedID = -1
+                                tables.selectedID = table.wrappedValue.tableID!
                                 tables.selectedType = .local
                                 tables.selectedTable = tables.localTables.firstIndex(where: {t in t === table.wrappedValue})!
                                 isEditorOpen = true
@@ -310,9 +315,31 @@ struct MyTablesList: View {
             .padding(EdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16))
         }
         .sheet(isPresented: $isSelectedTable) {
-            TablePreviewView(code: $code)
+            TablePreviewView(code: $code, timeTablePreview: TimeTable.empty)
+        }
+        
+        .sheet(isPresented: $isSelectedLocalTable) {
+            TablePreviewView(code: Binding.constant(""), timeTablePreview: selectedLocalTable)
         }
     }
+}
+
+func getNewLocalID() -> Int {
+    let strings = UserDefaults.standard.array(forKey: "localTables") as! [String]
+    
+    var tables: [TimeTable] = []
+    
+    for i in strings {
+        tables.append(try! JSONDecoder().decode(TimeTable.self, from: i.data(using: .utf8)!))
+    }
+    
+    var newID = -1
+    newID = -((UserDefaults.standard.integer(forKey: "localID") + 1) % 10000)
+    UserDefaults.standard.set(-newID, forKey: "localID")
+    
+    print(newID)
+    
+    return newID
 }
 
 struct MyTimeTablesView: View {
@@ -333,8 +360,6 @@ struct MyTimeTablesView: View {
             NavigationLink(destination: TimeTableEditor(tables: tables), isActive: $isEditorOpen, label: {})
                 .navigationBarHidden(true)
                 .navigationBarBackButtonHidden(true)
-            //NavigationLink(destination: EmailView(user: $user), isActive: $isEditorOpen, label: {})
-            
 
             HStack {
                 Button("Назад") {
@@ -349,6 +374,8 @@ struct MyTimeTablesView: View {
                 Button("Добавить") {
                     let table = TimeTable.empty
                     table.name = "Без имени"
+                    table.tableID = getNewLocalID()
+                                        
                     tables.localTables.append(table)
                     tables.selectedType = .local
                     tables.selectedTable = tables.localTables.count - 1

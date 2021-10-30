@@ -107,7 +107,7 @@ class TimeTable: Codable, ObservableObject, Equatable, Identifiable {
     }
     
     enum CodingKeys: CodingKey {
-        case name, firstWeek, secondWeek, days, lessonsTime, tableID
+        case name, firstWeek, secondWeek, days, lessonsTime, tableID, invite_code
     }
 
     init(days: [Day], name: String, firstWeek: String, secondWeek: String, times: [LessonTime]) {
@@ -126,6 +126,7 @@ class TimeTable: Codable, ObservableObject, Equatable, Identifiable {
         secondWeek = try container.decode(String.self, forKey: .secondWeek)
         lessonsTime = try container.decode([LessonTime].self, forKey: .lessonsTime)
         tableID = try? container.decode(Optional<Int>.self, forKey: .tableID)
+        invite_code = try? container.decode(Optional<String>.self, forKey: .invite_code)
     }
 
     func encode(to encoder: Encoder) throws {
@@ -136,6 +137,7 @@ class TimeTable: Codable, ObservableObject, Equatable, Identifiable {
         try container.encode(secondWeek, forKey: .secondWeek)
         try container.encode(lessonsTime, forKey: .lessonsTime)
         try container.encode(tableID, forKey: .tableID)
+        try container.encode(invite_code, forKey: .invite_code)
     }
     
     func setValues(table: TimeTable) {
@@ -145,6 +147,7 @@ class TimeTable: Codable, ObservableObject, Equatable, Identifiable {
         days = table.days
         tableID = table.tableID
         lessonsTime = table.lessonsTime
+        invite_code = table.invite_code
     }
 }
 

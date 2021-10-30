@@ -91,11 +91,11 @@ struct TimeTableCard: View {
                 }), at: btns.count - 2)
             }
             
-            if state == .changed || state == .global {
+            //if state == .changed || state == .global {
                 btns.insert(ActionSheet.Button.default(Text("Использовать"), action: {
                     onSet()
                 }), at: 0)
-            }
+            //}
             return ActionSheet(title: Text(name), message: nil, buttons: btns)
         })
     }
